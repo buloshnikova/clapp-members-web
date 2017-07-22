@@ -1,0 +1,40 @@
+<div class="con-md-8 col-md-offset-2">
+    <form [formGroup]="businessForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="title">Business Name</label>
+            <input
+                    type="text"
+                    id="title"
+                    class="form-control"
+                    formControlName="title">
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input
+                    type="text"
+                    id="email"
+                    class="form-control"
+                    formControlName="email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input
+                    type="password"
+                    id="password"
+                    class="form-control"
+                    formControlName="password">
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <input
+                    type="text"
+                    id="description"
+                    class="form-control"
+                    formControlName="description">
+        </div>
+        <button
+                class="btn btn-primary"
+                type="submit"
+                [disabled]="!businessForm.valid">Submit</button>
+    </form>
+</div>

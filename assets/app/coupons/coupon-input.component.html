@@ -1,0 +1,41 @@
+<div class="col-md-8 col-md-offset-2">
+    <form (ngSubmit)="onSubmit(f)" #f="ngForm" ngNativeValidate>
+        <div class="form-group">
+            <label for="title">Title</label>
+            <input
+                    type="text"
+                    id="title"
+                    class="form-control"
+                    [ngModel]="coupon?.title"
+                    name="title"
+                    required>
+        </div>
+        <div class="form-group">
+        <label for="exp_date">Expiration Date</label>
+        <input
+                type="text"
+                id="exp_date"
+                class="form-control"
+                [ngModel]="coupon?.exp_date"
+                name="exp_date">
+        </div>
+        <div>
+            <input
+                    type="text"
+                    id="barcode_img"
+                    class="form-control"
+                    [ngModel]="coupon?.barcode_img"
+                    name="barcode_img">
+            <img [src]="coupon?.barcode_img"
+                 id="barcode_img_img"
+                 name="barcode_img_img"
+                 required>
+        </div>
+        <input hidden
+               id="coupon_type"
+               name="coupon_type"
+               value="public">
+        <button class="btn btn-danger" type="button" (click)="onClear(f)">Clear</button>
+        <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+</div>
