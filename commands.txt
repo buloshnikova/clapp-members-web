@@ -1,0 +1,40 @@
+--start a client side
+--compile ts to js
+--keep this command running to livereload
+npm run build
+
+--start a mongo db
+--fist start a mongod
+--keep it running
+cd <project folder>/bin
+./mongod
+
+--start a server side
+npm start
+
+-----------------MONGO DB----------------
+
+--go to mongo db from terminal
+cd /Users/inna/DEV/mongodb/bin
+./mongo
+
+--get into database
+use clapp-members
+
+--get a list of tables/collections
+show collections
+
+--request all data from one collection
+db.collection_name.find()
+
+--remove one message
+db.collection_name.remove({})
+
+-----------PROD--------------
+--building for production
+npm run build:prod
+
+
+
+
+

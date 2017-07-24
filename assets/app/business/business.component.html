@@ -5,6 +5,7 @@
             <input
                     type="text"
                     id="title"
+                    [ngModel]="business?.title"
                     class="form-control"
                     formControlName="title">
         </div>
@@ -13,24 +14,37 @@
             <input
                     type="text"
                     id="email"
+                    [ngModel]="business?.email"
                     class="form-control"
-                    formControlName="email">
+                    formControlName="email"
+                    disabled>
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
-            <input
-                    type="password"
-                    id="password"
-                    class="form-control"
-                    formControlName="password">
-        </div>
-        <div class="form-group">
-            <label for="description">Description</label>
+            <label for="logo">Business Logo</label>
             <input
                     type="text"
-                    id="description"
+                    id="logo"
+                    [ngModel]="business?.logo"
                     class="form-control"
-                    formControlName="description">
+                    formControlName="logo">
+        </div>
+        <!--<div class="form-group">-->
+            <!--<label for="password">Password</label>-->
+            <!--<input-->
+                    <!--type="password"-->
+                    <!--id="password"-->
+                    <!--[ngModel]="business?.password"-->
+                    <!--class="form-control"-->
+                    <!--formControlName="password">-->
+        <!--</div>-->
+        <div class="form-group">
+            <label for="info">Business Info</label>
+            <input
+                    type="text"
+                    id="info"
+                    [ngModel]="business?.info"
+                    class="form-control"
+                    formControlName="info">
         </div>
         <button
                 class="btn btn-primary"

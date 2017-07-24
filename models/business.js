@@ -6,7 +6,7 @@ var schema = new Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
     title: {type: String, required: true, unique: true},
-    description: {type: String},
+    info: {type: String},
     logo: {type: String},
     categories: [{type: Schema.Types.ObjectId, ref: 'Category'}],
     locations: [{type: Schema.Types.ObjectId, ref: 'Location'}],

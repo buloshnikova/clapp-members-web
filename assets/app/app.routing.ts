@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { CouponsComponent } from "./coupons/coupons.component";
 import { AuthenticationComponent } from "./auth/authentication.component";
 import { BusinessComponent } from "./business/business.component";
+import { AuthService } from "./auth/auth.service";
 
 const APP_ROUTES: Routes = [
     {

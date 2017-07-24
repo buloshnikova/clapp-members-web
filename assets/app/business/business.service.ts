@@ -5,27 +5,40 @@ import { Observable } from "rxjs";
 
 import { Business } from "./business.model";
 import { ErrorService } from "../errors/error.service";
+import { AuthService } from "../auth/auth.service";
 
 @Injectable()
 export class BusinessService {
     private business: Business;
 
-    constructor(private http: Http, private errorService: ErrorService) {}
+    constructor(private http: Http, private errorService: ErrorService, private authService: AuthService) {}
 
     getBusinessInfo() {
-        return this.http.get('http://localhost:3000/business/')
+        //const body = JSON.stringify(business);
+        //const headers = new Headers({'Content-Type': 'application/json'});
+        const token = localStorage.getItem('token')
+            ? '?token=' + localStorage.getItem('token')
+            : '';
+        const business_id = localStorage.getItem('businessId')
+            ? localStorage.getItem('businessId')
+            : '';
+        return this.http.get('http://localhost:3000/business/'+ business_id + token)
             .map((response: Response) => {
-                const business = response.json.obj;
+                const business = response.json().obj;
                 return business;
             })
             .catch((error: Response) => {
+                console.log(error.status);
                 this.errorService.handleError(error.json());
+                if (error.status === 401) {
+                    this.authService.logout();
+                }
                 return Observable.throw(error.json());
             });
     }
 
     updateBusinessInfo(business: Business) {
-        const body = JSON.stringify(message);
+        const body = JSON.stringify(business);
         const headers = new Headers({'Content-Type': 'application/json'});
         const token = localStorage.getItem('token')
             ? '?token=' + localStorage.getItem('token')

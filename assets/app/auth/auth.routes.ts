@@ -7,7 +7,7 @@ import {LogoutComponent} from "./logout.component";
 const AUTH_ROUTES: Routes = [
     {
         path : '',
-        redirectTo: 'signup',
+        redirectTo: 'signin',
         pathMatch: 'full'
     },
     {

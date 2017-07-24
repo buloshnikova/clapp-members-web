@@ -65,45 +65,88 @@ router.post('/signin', function(req, res, next) {
 
 });
 
-// EDIT BUSINESS DATA
-router.patch('/:id', function(req, res, next) {
-    var decoded = jwt.decode(req.query.token);
-    Message.findById(req.params.id, function(err, business){
+// GET BUSINESS DATA
+router.get('/:business_id', function(req, res, next) {
+    jwt.verify(req.query.token, 'secretkey', function(err, decoded) {
         if(err) {
-            return res.status(500).json({
-                title: 'An error ocurred',
+            return res.status(401).json({
+                title: 'Not Authenticated',
                 error: err
             });
+            next();
         }
-        if (!business) {
-            return res.status(500).json({
-                title: 'No User Found',
-                error: {message: 'User not found'}
-            });
-        }
-        //if (business._id !== decoded.user._id) {
-        //    return res.status(401).json({
-        //        title: 'Not Authenticated',
-        //        error: {message: 'Users do not match'}
-        //    });
-        //}
-        business.title = req.body.title;
-        business.description = req.body.description;
-        business.logo = req.body.logo;
-        business.categories = req.body.categories;
-        business.locations = req.body.locations;
-        business.coupons = req.body.coupons;
-
-        business.save(function(err, result) {
+        Business.findOne({_id: req.params.business_id}, function (err, business) {
             if (err) {
                 return res.status(500).json({
                     title: 'An error ocurred',
                     error: err
                 });
             }
+            if (!business) {
+                return res.status(401).json({
+                    title: 'Login failed',
+                    error: {
+                        message: 'Invalid business id'
+                    }
+                });
+            }
             res.status(200).json({
-                message: 'Updated Message',
-                obj: result
+                message: 'Success',
+                obj: business
+            });
+        });
+    });
+});
+
+
+// EDIT BUSINESS DATA
+router.patch('/:id', function(req, res, next) {
+    //var decoded = jwt.decode(req.query.token);
+    jwt.verify(req.query.token, 'secretkey', function(err, decoded) {
+        if (err) {
+            return res.status(401).json({
+                title: 'Not Authenticated',
+                error: err
+            });
+            next();
+        }
+        Business.findById(req.params._id, function (err, business) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error ocurred',
+                    error: err
+                });
+            }
+            if (!business) {
+                return res.status(500).json({
+                    title: 'No User Found',
+                    error: {message: 'User not found'}
+                });
+            }
+            //if (business._id !== decoded.user._id) {
+            //    return res.status(401).json({
+            //        title: 'Not Authenticated',
+            //        error: {message: 'Users do not match'}
+            //    });
+            //}
+            business.title = req.body.title;
+            business.description = req.body.description;
+            business.logo = req.body.logo;
+            business.categories = req.body.categories;
+            business.locations = req.body.locations;
+            business.coupons = req.body.coupons;
+
+            business.save(function (err, result) {
+                if (err) {
+                    return res.status(500).json({
+                        title: 'An error ocurred',
+                        error: err
+                    });
+                }
+                res.status(200).json({
+                    message: 'Updated Business',
+                    obj: result
+                });
             });
         });
     });

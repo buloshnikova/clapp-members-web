@@ -11,6 +11,7 @@ import { Business } from "./business.model";
 
 export class BusinessComponent implements OnInit{
     businessForm: FormGroup;
+    business: Business;
 
     constructor(private businessService: BusinessService) {}
 
@@ -19,8 +20,8 @@ export class BusinessComponent implements OnInit{
         const business = new Business(
             this.signupForm.value.email,
             this.signupForm.value.password,
-            this.signupForm.value.title
-            //this.signupForm.value.description,
+            this.signupForm.value.title,
+            this.signupForm.value.info
             //this.signupForm.value.logo,
             //this.signupForm.value.categories,
             //this.signupForm.value.locations,
@@ -35,13 +36,22 @@ export class BusinessComponent implements OnInit{
     }
 
     ngOnInit() {
+        this.businessService.getBusinessInfo()
+            .subscribe(
+                (business: Business) => {
+                    this.business = business;
+                    console.log(this.business);
+                }
+            );
         this.businessForm = new FormGroup({
             title: new FormControl(null, Validators.required),
             email: new FormControl(null, [
                 Validators.required,
                 Validators.pattern("[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
             ]),
-            password: new FormControl(null, Validators.required)
+            password: new FormControl(null, Validators.required),
+            logo: new FormControl(null),
+            info: new FormControl(null)
         });
     }
 }

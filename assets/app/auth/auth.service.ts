@@ -2,6 +2,7 @@ import { Injectable, EventEmitter } from "@angular/core";
 import { Http, Headers, Response } from "@angular/http";
 import 'rxjs/Rx';
 import { Observable } from "rxjs";
+import { Router } from "@angular/router";
 
 import { Business } from "../business/business.model";
 import { ErrorService } from "../errors/error.service";
@@ -9,7 +10,7 @@ import { ErrorService } from "../errors/error.service";
 @Injectable()
 
 export class AuthService {
-    constructor(private http: Http, private errorService: ErrorService){}
+    constructor(private http: Http, private errorService: ErrorService, private router: Router ){}
 
     signup(business: Business) {
         const body = JSON.stringify(business);
@@ -24,7 +25,7 @@ export class AuthService {
     }
 
     signin(business: Business) {
-        const body = JSON.stringify(user);
+        const body = JSON.stringify(business);
         const headers = new Headers({'Content-Type': 'application/json'});
         return this.http.post('http://localhost:3000/business/signin', body, {headers: headers})
             .map((response: Response) => response.json())
@@ -36,6 +37,7 @@ export class AuthService {
 
     logout() {
         localStorage.clear();
+        this.router.navigate(['/auth', 'signin']);
     }
 
     isLoggedIn() {

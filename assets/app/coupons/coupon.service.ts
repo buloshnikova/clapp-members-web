@@ -48,7 +48,13 @@ export class CouponService {
     }
 
     getCoupons() {
-        return this.http.get('http://localhost:3000/coupon')
+        const token = localStorage.getItem('token')
+            ? '?token=' + localStorage.getItem('token')
+            : '';
+        const business_id = localStorage.getItem('businessId')
+            ? localStorage.getItem('businessId')
+            : '';
+        return this.http.get('http://localhost:3000/coupon/' + business_id + token)
             .map((response: Response) => {
                 const coupon = response.json().obj;
                 let transformedCoupons: Coupon[] = [];
