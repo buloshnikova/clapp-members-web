@@ -45,8 +45,9 @@ router.get('/:business_id', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    var decoded = jwt.decode(req.query.token);
-    Business.findById(decoded.business_id, function (err, business) {
+    console.log(req.body.business_id);
+    Business.findById(req.body.business_id, function (err, business) {
+        console.log("new coupon")
        if (err) {
            return res.status(401).json({
                title: 'Not Authenticated',
@@ -61,8 +62,12 @@ router.post('/', function(req, res, next) {
             start_date: req.body.start_date,
             barcode_img: req.body.barcode_img,
             img_type: req.body.img_type,
-            logo: req.body.logo
+            logo: req.body.logo,
+            categories: req.body.categories.map(function(item){
+                return item._id;
+            })
         });
+        console.log(coupon);
         coupon.save(function(err, result){
             if (err) {
                 return res.status(500).json({
