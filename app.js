@@ -10,6 +10,7 @@ var appRoutes = require('./routes/app');
 var couponRoutes = require('./routes/coupon');
 var userRoutes = require('./routes/user');
 var businessRoutes = require('./routes/business');
+var categoryRoutes = require('./routes/category');
 
 var app = express();
 //switch to production db when deploying
@@ -37,6 +38,7 @@ app.use(function(req, res, next) {
 app.use('/coupon', couponRoutes);
 app.use('/user', userRoutes);
 app.use('/business', businessRoutes);
+app.use('/category', categoryRoutes);
 app.use('/', appRoutes);
 
 // catch 404 and forward to error handler
