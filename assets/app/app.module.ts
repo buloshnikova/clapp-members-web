@@ -9,6 +9,7 @@ import { appRouting } from "./app.routing";
 import { AuthService } from "./auth/auth.service";
 import { ErrorComponent } from "./errors/error.component";
 import { ErrorService } from "./errors/error.service";
+import { CommonService } from "./shared/common.service";
 import { CouponModule } from "./coupons/coupon.module";
 import { BusinessModule } from "./business/business.module";
 
@@ -26,7 +27,7 @@ import { BusinessModule } from "./business/business.module";
         CouponModule,
         BusinessModule
     ],
-    providers: [AuthService, ErrorService],
+    providers: [AuthService, ErrorService, CommonService],
     bootstrap: [AppComponent]
 })
 export class AppModule {

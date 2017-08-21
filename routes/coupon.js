@@ -16,15 +16,21 @@ router.use('/', function(req, res, next) {
                 title: 'Not Authenticated',
                 error: err
             });
-            next();
         }
+        next();
     });
 });
 
+// GET ALL COUPONS BY BUSINESS ID
 router.get('/:business_id', function(req, res, next) {
     var decoded = jwt.decode(req.query.token);
+    if (req.params.business_id != decoded.business._id)
+        return res.status(401).json({
+            title: 'Not Authenticated',
+            error: { message: 'Business is not authenticated' }
+        });
     Coupon.find({business_id: req.params.business_id})
-        .populate('business', 'title')
+        .populate('categories locations coupon_type')
         .exec(function(err, coupons) {
             if (err) {
                 return res.status(500).json({
@@ -32,7 +38,7 @@ router.get('/:business_id', function(req, res, next) {
                     error: err
                 });
             }
-            if (coupons[0] && coupons[0].business_id != decoded.business_id)
+            if (!coupons[0] && coupons[0].business_id != decoded.business_id)
                 return res.status(401).json({
                     title: 'Not Authenticated',
                     error: { message: 'Business is not authenticated' }
@@ -44,16 +50,53 @@ router.get('/:business_id', function(req, res, next) {
         });
 });
 
+// GET ONE COUPON BY COUPON ID
+router.get('/:business_id/:coupon_id', function(req, res, next) {
+    var decoded = jwt.decode(req.query.token);
+    if (req.params.business_id != decoded.business._id)
+        return res.status(401).json({
+            title: 'Not Authenticated',
+            error: { message: 'Business is not authenticated' }
+        });
+    Coupon.findById({id: req.params.coupon_id})
+        .populate('categories locations coupon_type')
+        .exec(function(err, coupons) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occurred',
+                    error: err
+                });
+            }
+            if (!coupons[0] && coupons[0].business_id != decoded.business_id)
+                return res.status(401).json({
+                    title: 'Not Authenticated',
+                    error: { message: 'Business is not authenticated' }
+                });
+            res.status(200).json({
+                message: 'Success',
+                obj: coupons
+            });
+        });
+});
+
+// ADD NEW COUPON
 router.post('/', function(req, res, next) {
-    console.log(req.body.business_id);
+    var decoded = jwt.decode(req.query.token);
     Business.findById(req.body.business_id, function (err, business) {
-        console.log("new coupon")
        if (err) {
            return res.status(401).json({
                title: 'Not Authenticated',
                error: { message: 'Business is not authenticated' }
            });
-       }
+        }
+        if (req.body.business_id != decoded.business._id)
+            return res.status(401).json({
+                title: 'Not Authenticated',
+                error: { message: 'Business is not authenticated' }
+            });
+        //another way to save array if a parameter contains _id only
+        //var categories = req.body.categories;
+        //var locations = req.body.locations;
         var coupon = new Coupon({
             business_id: req.body.business_id,
             title: req.body.title,
@@ -63,11 +106,14 @@ router.post('/', function(req, res, next) {
             barcode_img: req.body.barcode_img,
             img_type: req.body.img_type,
             logo: req.body.logo,
+            coupon_type: req.body.coupon_type._id,
             categories: req.body.categories.map(function(item){
+                return item._id;
+            }),
+            locations: req.body.locations.map(function(item){
                 return item._id;
             })
         });
-        console.log(coupon);
         coupon.save(function(err, result){
             if (err) {
                 return res.status(500).json({
@@ -83,53 +129,61 @@ router.post('/', function(req, res, next) {
     });
 });
 
+// UPDATE COUPON
 router.patch('/:id', function(req, res, next){
     var decoded = jwt.decode(req.query.token);
-   Coupon.findById(req.params.id, function(err, coupon) {
+    Coupon.findById(req.params.id, function(err, coupon) {
        if (err) {
            return res.status(500).json({
                title: 'An error occurred',
                error: err
            });
-           if (!coupon){
-               return res.status(500).json({
-                   title: 'No Coupon Found',
-                   error: { message: 'Coupon Not Found'}
-               });
-           }
-           if (coupon.business_id != decoded.business_id)
-               return res.status(401).json({
-                   title: 'Not Authenticated',
-                   error: { message: 'Business is not authenticated' }
-               });
-           //compose coupon
-           coupon.business_id = req.body.business_id;
-           coupon.title = req.body.title;
-           coupon.description = req.body.description;
-           coupon.exp_date = req.body.exp_date;
-           coupon.start_date = req.body.start_date;
-           coupon.barcode_img = req.body.barcode_img;
-           coupon.img_type = req.body.img_type;
-           coupon.logo = req.body.logo;
-
-           //save coupon to DB
-           coupon.save( function(err, result) {
-               if (err) {
-                   return res.status(500).json({
-                       title: 'An error occurred',
-                       error: err
-                   });
-               }
-               res.status(200).json({
-                   message: 'Updated',
-                   obj: result
-               });
+       }
+       if (!coupon){
+           return res.status(500).json({
+               title: 'No Coupon Found',
+               error: { message: 'Coupon Not Found'}
            });
        }
+       if (coupon.business_id != decoded.business._id)
+           return res.status(401).json({
+               title: 'Not Authenticated',
+               error: { message: 'Business is not authenticated' }
+           });
+       //compose coupon
+       //coupon.business_id = req.body.business_id;
+       coupon.title = req.body.title;
+       coupon.description = req.body.description;
+       coupon.exp_date = req.body.exp_date;
+       coupon.start_date = req.body.start_date;
+       coupon.barcode_img = req.body.barcode_img;
+       coupon.img_type = req.body.img_type;
+       coupon.logo = req.body.logo;
+       coupon.coupon_type = req.body.coupon_type._id;
+       coupon.categories = req.body.categories.map(function(item){
+           return item._id;
+       });
+       coupon.locations = req.body.locations.map(function(item){
+           return item._id;
+       });
 
+       //save coupon to DB
+       coupon.save( function(err, result) {
+           if (err) {
+               return res.status(500).json({
+                   title: 'An error occurred',
+                   error: err
+               });
+           }
+           res.status(200).json({
+               message: 'Updated',
+               obj: result
+           });
+       });
    });
 });
 
+// DELETE COUPON
 router.delete('/:id', function(req, res, next){
     var decoded = jwt.decode(req.query.token);
     Coupon.findById(req.params.id, function(err, coupon) {
@@ -144,7 +198,7 @@ router.delete('/:id', function(req, res, next){
                     error: { message: 'Coupon Not Found'}
                 });
             }
-            if (coupon.business_id != decoded.business_id)
+            if (coupon.business_id != decoded.business._id)
                 return res.status(401).json({
                     title: 'Not Authenticated',
                     error: { message: 'Business is not authenticated' }

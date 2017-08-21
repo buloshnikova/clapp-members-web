@@ -12,6 +12,9 @@ cd <project folder>/bin
 --start a server side
 npm start
 
+--run a client
+ng serve
+
 -----------------MONGO DB----------------
 
 --go to mongo db from terminal

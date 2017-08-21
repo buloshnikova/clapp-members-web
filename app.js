@@ -5,12 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var upload = require('express-fileupload'); // example: https://www.npmjs.com/package/express-fileupload
 
 var appRoutes = require('./routes/app');
 var couponRoutes = require('./routes/coupon');
 var userRoutes = require('./routes/user');
 var businessRoutes = require('./routes/business');
 var categoryRoutes = require('./routes/category');
+var couponTypeRoutes = require('./routes/coupon_type');
+var locationRoutes = require('./routes/location');
+var uploadRoutes = require('./routes/upload');
 
 var app = express();
 //switch to production db when deploying
@@ -27,6 +31,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(upload());
 
 app.use(function(req, res, next) {
   res.setHeader('Access-Control-Allow-origin', '*');
@@ -39,6 +44,9 @@ app.use('/coupon', couponRoutes);
 app.use('/user', userRoutes);
 app.use('/business', businessRoutes);
 app.use('/category', categoryRoutes);
+app.use('/coupon_type', couponTypeRoutes);
+app.use('/location', locationRoutes);
+app.use('/upload', uploadRoutes);
 app.use('/', appRoutes);
 
 // catch 404 and forward to error handler

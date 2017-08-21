@@ -17,17 +17,38 @@
                     [ngModel]="business?.email"
                     class="form-control"
                     formControlName="email"
-                    disabled>
+                    readonly>
         </div>
         <div class="form-group">
             <label for="logo">Business Logo</label>
+            <img
+                    id="logo-img"
+                    [src]="business?.logo"
+                    class="form-control img-thumbnail logo">
+
+            <image-upload
+            [max]="100"
+            [preview]="false"
+            [url]="'/upload/img'"
+            [headers]="{Authorization: 'MyToken'}"
+            [buttonCaption]="'Select Logo'"
+            [dropBoxMessage]="'Drop your images here'"
+            [extensions]="['jpg','png','gif']"
+            [class]="'customClass'"
+            (onFileUploadFinish)="imageFinishedUploading($event)"
+            (onRemove)="imageRemoved($event)"
+            (isPending)="uploadStateChange($event)">
+            </image-upload>
+
             <input
                     type="text"
                     id="logo"
                     [ngModel]="business?.logo"
                     class="form-control"
-                    formControlName="logo">
+                    formControlName="logo"
+                    [hidden]="true">
         </div>
+
         <!--<div class="form-group">-->
             <!--<label for="password">Password</label>-->
             <!--<input-->
@@ -51,4 +72,20 @@
                 type="submit"
                 [disabled]="!businessForm.valid">Submit</button>
     </form>
+
+
+    <!--<image-upload-->
+            <!--[max]="100"-->
+            <!--[preview]="false"-->
+            <!--[url]="'/upload/img'"-->
+            <!--[headers]="{Authorization: 'MyToken'}"-->
+            <!--[buttonCaption]="'Select Logo'"-->
+            <!--[dropBoxMessage]="'Drop your images here'"-->
+            <!--[extensions]="['jpg','png','gif']"-->
+            <!--[class]="'customClass'"-->
+            <!--(onFileUploadFinish)="imageFinishedUploading($event)"-->
+            <!--(onRemove)="imageRemoved($event)"-->
+            <!--(isPending)="uploadStateChange($event)">-->
+    <!--</image-upload>-->
+
 </div>

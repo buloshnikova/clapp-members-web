@@ -1,30 +1,31 @@
 var express = require('express');
 var router = express.Router();
 
-var Category = require('../models/category')
+var CouponType = require('../models/coupon_type');
 
 // API END POINTS
 
-// ADD NEW CATEGORY
+// ADD NEW COUPON_TYPE
 router.post('/', function (req, res, next) {
-    Category.findOne({"name": req.body.name}, function(err, category) {
+    CouponType.findOne({"name": req.body.name}, function(err, coupon_type) {
         if (err) {
             return res.status(500).json({
                 title: 'An error occurred',
                 error: err
             });
         }
-        if (category){
+        if (coupon_type){
             return res.status(401).json({
-                title: 'Category exists',
-                error: { message: 'This category already exists in database.' }
+                title: 'Coupon type exists',
+                error: { message: 'This coupon type already exists in database.' }
             });
         }
 
-        var category = new Category({
-            name: req.body.name
+        var coupon_type = new CouponType({
+            name: req.body.name,
+            type: req.body.type
         });
-        category.save(function (err, result) {
+        coupon_type.save(function (err, result) {
             if (err) {
                 return res.status(500).json({
                     title: 'An error occurred',
@@ -41,52 +42,53 @@ router.post('/', function (req, res, next) {
 
 });
 
-// GET ALL CATEGORIES
+// GET ALL COUPON_TYPES
 router.get('/', function(req, res, next) {
-        Category.find()
-            .exec(function(err, categories){
+    CouponType.find()
+        .exec(function(err, coupon_types){
             if (err) {
-                    return res.status(500).json({
-                        title: 'An error ocurred',
-                        error: err
-                    });
-                }
-            if (!categories){
+                return res.status(500).json({
+                    title: 'An error ocurred',
+                    error: err
+                });
+            }
+            if (!coupon_types){
                 return res.status(401).json({
                     title: 'No data',
                     error: {
-                        message: 'No category found.'
+                        message: 'No coupon type found.'
                     }
                 });
             }
             res.status(200).json({
                 message: 'Success',
-                obj: categories
+                obj: coupon_types
             });
-    });
+        });
 });
 
-// EDIT CATEGORY
+// EDIT COUPON_TYPE
 router.patch('/:id', function(req, res, next) {
-    Category.findById(req.params.id, function (err, category) {
+    CouponType.findById(req.params.id, function (err, coupon_type) {
         if (err) {
             return res.status(500).json({
                 title: 'An error ocurred',
                 error: err
             });
         }
-        if (!category) {
+        if (!coupon_type) {
             return res.status(500).json({
                 title: 'No data',
                 error: {
-                    message: 'No category found'
+                    message: 'No coupon type found'
                 }
             });
         }
 
-        category.name = req.body.name;
+        coupon_type.name = req.body.name;
+        coupon_type.type = req.body.type;
 
-        category.save(function (err, result) {
+        coupon_type.save(function (err, result) {
             if (err) {
                 return res.status(500).json({
                     title: 'An error ocurred',
@@ -94,12 +96,13 @@ router.patch('/:id', function(req, res, next) {
                 });
             }
             res.status(200).json({
-                message: 'Updated category',
+                message: 'Updated coupon type',
                 obj: result
             });
         });
     });
 });
 
+// DELETE COUPON_TYPE
 
 module.exports = router;

@@ -23,3 +23,10 @@ a.danger {
 input.ng-invalid.ng-touched {
   border: 1px solid red;
 }
+
+.logo {
+  width: 30%;
+  height: auto;
+}
+
+[hidden] { display: none !important;}

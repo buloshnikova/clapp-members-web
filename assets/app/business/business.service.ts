@@ -47,10 +47,15 @@ export class BusinessService {
             ? localStorage.getItem('businessId')
             : '';
         return this.http.patch('http://localhost:3000/business/' + business_id + token, body, {headers: headers})
-            .map((response: Response) => response.json())
+            .map((response: Response) => {
+                const business = response.json().obj;
+                return business;
+            })
             .catch((error: Response) => {
                 this.errorService.handleError(error.json());
                 return Observable.throw(error.json());
             });
     }
+
+
 }

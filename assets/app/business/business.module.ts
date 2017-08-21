@@ -4,6 +4,9 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { BusinessComponent } from "./business.component";
 import { BusinessService } from "./business.service";
 
+import { ImageUploadModule } from "angular2-image-upload";
+// examples: https://github.com/aberezkin/ng2-image-upload
+// https://aberezkin.github.io/ng2-image-upload/
 
 @NgModule({
     declarations:[
@@ -11,7 +14,8 @@ import { BusinessService } from "./business.service";
     ],
     imports: [
         CommonModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        ImageUploadModule.forRoot()
     ],
     providers: [BusinessService]
 })

@@ -13,6 +13,7 @@ export class CouponService {
 
     constructor(private http: Http, private errorService: ErrorService){}
 
+    // ADD NEW COUPON
     addCoupon(coupon: Coupon){
         const body = JSON.stringify(coupon);
         const headers = new Headers({'Content-Type': 'application/json'});
@@ -47,6 +48,7 @@ export class CouponService {
             });
     }
 
+    // GET ALL COUPONS BY BUSINESS
     getCoupons() {
         const token = localStorage.getItem('token')
             ? '?token=' + localStorage.getItem('token')

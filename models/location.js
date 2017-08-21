@@ -1,16 +1,17 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var mongooseUniqueValidator = require('mongoose-unique-validator');
 
 var schema = new Schema({
-    country: {type: String, required: true, unique: true},
+    business_id: {type: Schema.Types.ObjectId, ref: 'Business', required: true},
+    country: {type: String, required: true},
     city: {type: String, required: true},
-    address: {type: String},
-    google_maps_url: {type: String}
+    address_line_1: {type: String},
+    address_line_2: {type: String},
+    google_maps_url: {type: String},
+    coupon_id: {type: Schema.Types.ObjectId, ref: 'Coupon'}
 });
 
 // extra validation for a parameter marked as unique:true
 // email: {type: String, required: true, unique: true}
-schema.plugin(mongooseUniqueValidator);
 
 module.exports = mongoose.model('Location', schema);
