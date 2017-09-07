@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var uuid = require('uuid');
 var imgUploadUrl = 'public/upload/img/';
+var imgPublicUrl = '/upload/img/';
 
 router.post('/img', function(req, res) {
     if (!req.files)
@@ -26,7 +27,7 @@ router.post('/img', function(req, res) {
 
         res.status(201).json({
             message: 'File uploaded',
-            filename : __dirname + '/../' + imgUploadUrl + filename
+            filename : imgPublicUrl + filename
         });
         //res.send('File uploaded!');
     });

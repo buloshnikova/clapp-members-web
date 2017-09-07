@@ -14,11 +14,15 @@ export class BusinessComponent implements OnInit{
     businessForm: FormGroup;
     business: Business;
     categories:any = [];
+    selectedCategories:any = [];
+    selectedCategory = {};
+    isFormChanged = false;
 
     constructor(private businessService: BusinessService, private commonService: CommonService) {}
 
 
     onSubmit() {
+        this.isFormChanged = false;
         const business = new Business(
             this.businessForm.value.email,
             null,
@@ -50,7 +54,7 @@ export class BusinessComponent implements OnInit{
     imageFinishedUploading($event) {
         var res = JSON.parse($event.serverResponse._body);
         console.log(res.filename);
-        this.business.logo = res.filename;
+        this.business.logo = window.location.origin + res.filename;
     }
 
     uploadStateChange($event) {
@@ -59,11 +63,50 @@ export class BusinessComponent implements OnInit{
         }
     }
 
+    addCategory(index) {
+        console.log(index);
+        if (null == this.business.categories) {
+            this.business.categories = [];
+        }
+        if (null == this.selectedCategories) {
+            this.selectedCategories = [];
+        }
+
+        this.business.categories.push(this.selectedCategory._id);
+        this.selectedCategories.push(this.selectedCategory);
+
+        // remove selected category from the whole list of categories
+        this.categories.splice(this.selectedCategory,1);
+
+        // clean up selected category
+        this.selectedCategory = this.categories[0];
+
+        console.log(this.business.categories);
+    }
+
+    removeCategory(item) {
+        if (null != item) {
+            this.business.categories.splice(item, 1);
+            this.selectedCategories.splice(item, 1);
+            // push back removed category to the whole list of categories
+            this.categories.push(item);
+            item = {};
+        }
+
+        console.log(this.business.categories);
+    }
+
+    onSelectedChanged() {
+        console.log('select changed');
+        this.isFormChanged = false;
+    }
+
     ngOnInit() {
         this.businessService.getBusinessInfo()
             .subscribe(
                 (business: Business) => {
                     this.business = business;
+                    this.selectedCategories = business.categories;
                     console.log(this.business);
                 }
             );
@@ -71,7 +114,9 @@ export class BusinessComponent implements OnInit{
             .subscribe(
                 data => {
                     this.categories = data;
+                    this.selectedCategory = data[0];
                     console.log(data);
+                    this.isFormChanged = false;
                 }
             );
 
@@ -83,8 +128,15 @@ export class BusinessComponent implements OnInit{
             ]),
             //password: new FormControl(null, Validators.required),
             logo: new FormControl(null),
-            info: new FormControl(null)
+            info: new FormControl(null),
+            selectedCategory: new FormControl(null)
         });
 
+        this.businessForm.valueChanges.subscribe( data => {
+            console.log('Form changes', data);
+            this.isFormChanged = true;
+        })
+
     }
+
 }
