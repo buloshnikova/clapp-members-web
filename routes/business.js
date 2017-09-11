@@ -133,7 +133,7 @@ router.get('/:business_id', function(req, res, next) {
         }
         //next();
         Business.findOne({_id: req.params.business_id})
-            .populate('categories', 'locations')
+            .populate('locations')
             .exec(function (err, business) {
             if (err) {
                 return res.status(500).json({

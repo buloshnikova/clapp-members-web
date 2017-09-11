@@ -29,8 +29,39 @@ input.ng-invalid.ng-touched {
   height: auto;
 }
 
-ul.categories {
+/*CATEGORIES*/
+ul.categories-tag, ul.locations-tag {
   display: inline-flex;
+  padding: 0;
 }
+
+.categories-tag li, .locations-tag li {
+  list-style: none;
+  margin: 15px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.categories-tag li span {
+  font-size: 1.1em;
+}
+div.categories-tag {
+  padding: 0;
+
+}
+
+a.categories-tag-btn {
+  padding: 0 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+/*LOCATIONS*/
+.locations-tag input {
+  margin: 5px 0;
+}
+
 
 [hidden] { display: none !important;}

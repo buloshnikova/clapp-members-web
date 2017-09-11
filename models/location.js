@@ -8,7 +8,7 @@ var schema = new Schema({
     address_line_1: {type: String},
     address_line_2: {type: String},
     google_maps_url: {type: String},
-    coupon_id: {type: Schema.Types.ObjectId, ref: 'Coupon'}
+    coupon_id: [{type: Schema.Types.ObjectId, ref: 'Coupon'}]
 });
 
 // extra validation for a parameter marked as unique:true

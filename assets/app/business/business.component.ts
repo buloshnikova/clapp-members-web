@@ -4,6 +4,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { BusinessService } from "./business.service";
 import { Business } from "./business.model";
 import { CommonService } from "../shared/common.service";
+import forEachChild = ts.forEachChild;
 
 @Component({
     selector: 'app-business',
@@ -30,9 +31,8 @@ export class BusinessComponent implements OnInit{
             this.businessForm.value.title,
             this.businessForm.value.info,
             this.businessForm.value.logo,
-            null, null, null
-            //this.businessForm.value.categories,
-            //this.businessForm.value.locations,
+            this.business.categories,
+            this.business.locations
             //this.businessForm.value.coupons
         );
         console.log(business);
@@ -63,8 +63,10 @@ export class BusinessComponent implements OnInit{
         }
     }
 
+    // CATEGORIES
     addCategory(index) {
-        console.log(index);
+        this.isFormChanged = true;
+
         if (null == this.business.categories) {
             this.business.categories = [];
         }
@@ -72,33 +74,90 @@ export class BusinessComponent implements OnInit{
             this.selectedCategories = [];
         }
 
+        this.selectedCategory = this.categories[index];
         this.business.categories.push(this.selectedCategory._id);
         this.selectedCategories.push(this.selectedCategory);
 
         // remove selected category from the whole list of categories
-        this.categories.splice(this.selectedCategory,1);
+        this.categories.splice(index,1);
 
         // clean up selected category
-        this.selectedCategory = this.categories[0];
-
-        console.log(this.business.categories);
+        this.selectedCategory = 0;
     }
 
     removeCategory(item) {
         if (null != item) {
+            this.isFormChanged = true;
+
+            let category = this.selectedCategories[item];
             this.business.categories.splice(item, 1);
             this.selectedCategories.splice(item, 1);
             // push back removed category to the whole list of categories
-            this.categories.push(item);
-            item = {};
+            this.categories.push(category);
+            this.sortCategories();
         }
-
-        console.log(this.business.categories);
     }
 
     onSelectedChanged() {
-        console.log('select changed');
         this.isFormChanged = false;
+    }
+
+    initCategories(data){
+            this.categories = data;
+
+            if (null != this.business && this.business.categories.length > 0) {
+                console.log(this.business.categories);
+                for( var i = 0; i < this.business.categories.length; i++) {
+                    // remove from categories all the items existed in business.categories
+                    // insert into selected categories all items removed
+                    let catId = this.business.categories[i];
+
+                    let category = this.categories.find( c => c._id === catId);
+                    if (null == this.selectedCategories) {
+                        this.selectedCategories = [];
+                    }
+                    this.selectedCategories.push(category);
+                    const index: number = this.categories.indexOf(category);
+                    if (index !== -1) {
+                        this.categories.splice(index, 1);
+                    }
+                }
+            }
+            console.log(this.selectedCategories);
+            this.sortCategories();
+            this.selectedCategory = 0;
+            this.isFormChanged = false;
+    }
+
+    sortCategories() {
+        this.categories.sort((a: any, b: any) => {
+            if (a.name < b.name ){
+                //a is the Object and args is the orderBy condition (data.likes.count in this case)
+                return -1;
+            }else if( a.name > b.name ){
+                return 1;
+            }else{
+                return 0;
+            }
+        });
+    }
+
+    // LOCATIONS
+    addLocation() {
+        this.isFormChanged = true;
+        let newLocation = {};
+        this.business.locations.push(newLocation);
+    }
+
+    removeLocation(item){
+        if (null !== item) {
+            this.isFormChanged = true;
+            this.business.locations.splice(item, 1);
+        }
+    }
+
+    trackByIndex(index: number, obj: any): any {
+        return index;
     }
 
     ngOnInit() {
@@ -106,17 +165,14 @@ export class BusinessComponent implements OnInit{
             .subscribe(
                 (business: Business) => {
                     this.business = business;
-                    this.selectedCategories = business.categories;
                     console.log(this.business);
                 }
             );
         this.commonService.getAllCategories()
             .subscribe(
+
                 data => {
-                    this.categories = data;
-                    this.selectedCategory = data[0];
-                    console.log(data);
-                    this.isFormChanged = false;
+                    this.initCategories(data);
                 }
             );
 
@@ -129,14 +185,26 @@ export class BusinessComponent implements OnInit{
             //password: new FormControl(null, Validators.required),
             logo: new FormControl(null),
             info: new FormControl(null),
-            selectedCategory: new FormControl(null)
+            selectedCategory: new FormControl(null),
+            locationCountry: new FormControl(null)
+        });
+        this.businessForm.get('selectedCategory').setValue('', { onlySelf: true,emitEvent:false });
+
+        //this.businessForm.valueChanges.subscribe( data => {
+        //    console.log('Form changes', data);
+        //    this.isFormChanged = true;
+        //});
+        this.businessForm.get('title').valueChanges.subscribe( data => {
+            this.isFormChanged = true;
         });
 
-        this.businessForm.valueChanges.subscribe( data => {
-            console.log('Form changes', data);
+        this.businessForm.get('logo').valueChanges.subscribe( data => {
             this.isFormChanged = true;
-        })
+        });
 
+        this.businessForm.get('info').valueChanges.subscribe( data => {
+            this.isFormChanged = true;
+        });
     }
 
 }
