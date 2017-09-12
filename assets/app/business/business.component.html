@@ -113,47 +113,41 @@
 
     <br>
 
-    <!--<accordion>-->
-        <!--<accordion-group heading="Edit Business Locations" isGroupOpen="true">-->
+    <!--ADD NEW LOCATION-->
+    <div class="form-group">
+        <label for="locations">Locations</label>
+        <div class="row">
+            <div class="col-md-3">
+                <button
+                        id="locations"
+                        class="btn btn-secondary"
+                        type="button"
+                        (click)="addLocation()">Add new address</button>
 
-            <!--&lt;!&ndash;ADD NEW LOCATION&ndash;&gt;-->
-            <!--<div class="form-group">-->
-                <!--<label for="locations">Locations</label>-->
-                <!--<div class="row">-->
-                    <!--<div class="col-md-3">-->
-                        <!--<button-->
-                                <!--id="locations"-->
-                                <!--class="btn btn-secondary"-->
-                                <!--type="button"-->
-                                <!--(click)="addLocation()">Add new address</button>-->
+            </div>
+        </div>
 
-                    <!--</div>-->
-                <!--</div>-->
+        <!--LOCATIONS LIST-->
+        <ul class="locations-tag">
+            <li *ngFor="let location of business?.locations; let index=index;">
+                <a class="btn btn-danger categories-tag-btn" (click)="removeLocation(index)">X</a>
+                <span>{{business?.locations[index].country}}</span>
+                <input
+                        id="locations-{{index}}"
+                        [(ngModel)]="business?.locations[index].country"
+                        name="locations-{{index}}"
+                        type="text"
+                        class="form-control"
+                        placeholder="Country"
+                        aria-label="Country">
+                <input type="text" class="form-control" placeholder="City" aria-label="City" value={{location?.city}}>
+                <input type="text" class="form-control" placeholder="Address Line 1" aria-label="Address Line 1" value={{location?.address_line_1}}>
+                <input type="text" class="form-control" placeholder="Address Line 2" aria-label="Address Line 2" value={{location?.address_line_2}}>
+                <input type="text" class="form-control" placeholder="Google maps link" aria-label="Google maps link" value={{location?.google_maps_url}}>
+            </li>
+        </ul>
 
-                <!--&lt;!&ndash;LOCATIONS LIST&ndash;&gt;-->
-                <!--<ul class="locations-tag">-->
-                    <!--<li *ngFor="let location of business?.locations; let index=index;">-->
-                        <!--<a class="btn btn-danger categories-tag-btn" (click)="removeLocation(index)">X</a>-->
-                        <!--<span>{{business?.locations[index].country}}</span>-->
-                        <!--<input-->
-                                <!--id="locations-{{index}}"-->
-                                <!--[(ngModel)]="business?.locations[index].country"-->
-                                <!--name="locations-{{index}}"-->
-                                <!--type="text"-->
-                                <!--class="form-control"-->
-                                <!--placeholder="Country"-->
-                                <!--aria-label="Country">-->
-                        <!--<input type="text" class="form-control" placeholder="City" aria-label="City" value={{location?.city}}>-->
-                        <!--<input type="text" class="form-control" placeholder="Address Line 1" aria-label="Address Line 1" value={{location?.address_line_1}}>-->
-                        <!--<input type="text" class="form-control" placeholder="Address Line 2" aria-label="Address Line 2" value={{location?.address_line_2}}>-->
-                        <!--<input type="text" class="form-control" placeholder="Google maps link" aria-label="Google maps link" value={{location?.google_maps_url}}>-->
-                    <!--</li>-->
-                <!--</ul>-->
+    </div>
 
-            <!--</div>-->
-
-
-        <!--</accordion-group>-->
-    <!--</accordion>-->
 
 </div>

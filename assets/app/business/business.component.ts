@@ -5,13 +5,10 @@ import { BusinessService } from "./business.service";
 import { Business } from "./business.model";
 import { CommonService } from "../shared/common.service";
 import forEachChild = ts.forEachChild;
-import { Accordion, AccordionGroup } from '../directives/accordion';
-import {Component} from 'angular2/core';
 
 @Component({
     selector: 'app-business',
-    templateUrl: './business.component.html',
-    directives: [Accordion, AccordionGroup]
+    templateUrl: './business.component.html'
 })
 
 export class BusinessComponent implements OnInit{
