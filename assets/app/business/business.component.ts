@@ -5,10 +5,13 @@ import { BusinessService } from "./business.service";
 import { Business } from "./business.model";
 import { CommonService } from "../shared/common.service";
 import forEachChild = ts.forEachChild;
+import { Accordion, AccordionGroup } from '../directives/accordion';
+import {Component} from 'angular2/core';
 
 @Component({
     selector: 'app-business',
-    templateUrl: './business.component.html'
+    templateUrl: './business.component.html',
+    directives: [Accordion, AccordionGroup]
 })
 
 export class BusinessComponent implements OnInit{
@@ -185,8 +188,7 @@ export class BusinessComponent implements OnInit{
             //password: new FormControl(null, Validators.required),
             logo: new FormControl(null),
             info: new FormControl(null),
-            selectedCategory: new FormControl(null),
-            locationCountry: new FormControl(null)
+            selectedCategory: new FormControl(null)
         });
         this.businessForm.get('selectedCategory').setValue('', { onlySelf: true,emitEvent:false });
 
