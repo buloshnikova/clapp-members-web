@@ -10,6 +10,8 @@ import { ImageUploadModule } from "angular2-image-upload";
 // examples: https://github.com/aberezkin/ng2-image-upload
 // https://aberezkin.github.io/ng2-image-upload/
 
+import {AccordionModule} from "ng2-accordion";
+
 @NgModule({
     declarations:[
         BusinessComponent
@@ -19,7 +21,8 @@ import { ImageUploadModule } from "angular2-image-upload";
         ReactiveFormsModule,
         ImageUploadModule.forRoot(),
         BrowserModule,
-        FormsModule
+        FormsModule,
+        AccordionModule
     ],
     providers: [BusinessService]
 })
