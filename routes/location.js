@@ -30,7 +30,7 @@ function getLocationsByParams(business_id, coupon_id, res){
     Location.find(query, function(err, locations) {
             if (err) {
                 return res.status(500).json({
-                    title: 'An error ocurred',
+                    title: 'An error occurred',
                     error: err
                 });
             }

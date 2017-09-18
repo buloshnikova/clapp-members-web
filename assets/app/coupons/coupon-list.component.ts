@@ -21,6 +21,7 @@ export class CouponListComponent implements OnInit {
     constructor(private couponService: CouponService) {}
 
     ngOnInit() {
+
         this.couponService.getCoupons()
         .subscribe(
             (coupons: Coupon[]) => {

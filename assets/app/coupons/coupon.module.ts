@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { CouponsComponent } from "./coupons.component";
 import { CouponComponent } from "./coupon.component";
@@ -18,7 +19,8 @@ import { CouponService } from "./coupon.service";
     ],
     imports: [
         CommonModule,
-        FormsModule
+        ReactiveFormsModule,
+        BrowserModule
     ],
     providers: [CouponService]
 })

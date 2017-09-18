@@ -5,20 +5,7 @@ import { CouponService } from "./coupon.service";
 @Component({
     selector: 'app-coupon',
     templateUrl: './coupon.component.html',
-    styles: [`
-        .author {
-            display: inline-block;
-            font-style: italic;
-            font-size: 12px;
-            width: 80%;
-        }
-        .config {
-            display: inline-block;
-            text-align: right;
-            font-size: 12px;
-            width: 19%;
-        }
-    `]
+    styleUrls: ['./coupon.component.css']
 })
 
 export class CouponComponent {
@@ -27,7 +14,7 @@ export class CouponComponent {
     constructor(private couponService: CouponService) {}
 
     onEdit() {
-        this.CouponService.editCoupon(this.coupon);
+        this.couponService.editCoupon(this.coupon);
     }
 
     onDelete() {

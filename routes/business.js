@@ -131,7 +131,6 @@ router.get('/:business_id', function(req, res, next) {
                 error: err
             });
         }
-        //next();
         Business.findOne({_id: req.params.business_id})
             .populate('locations')
             .exec(function (err, business) {

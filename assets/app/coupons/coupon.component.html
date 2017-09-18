@@ -1,10 +1,16 @@
 <article class="panel panel-default">
-    <div class="panel-body">
+    <div class="panel-body title">
         {{ coupon.title }}
     </div>
+    <div class="panel-body">
+        <div class="description">
+            {{ coupon.description }}
+        </div>
+        <img class="thumb" src="{{coupon.barcode_img}}">
+    </div>
     <footer class="panel-footer">
-        <div class="author">
-            {{ coupon.exp_date }}
+        <div class="date">
+            Expiration date: {{ coupon.exp_date }}
         </div>
         <div class="config">
             <a (click)="onEdit()">Edit</a>

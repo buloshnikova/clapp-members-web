@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { BusinessService } from "./business.service";
@@ -6,12 +6,13 @@ import { Business } from "./business.model";
 import { CommonService } from "../shared/common.service";
 import forEachChild = ts.forEachChild;
 
+
 @Component({
     selector: 'app-business',
     templateUrl: './business.component.html'
 })
 
-export class BusinessComponent implements OnInit{
+export class BusinessComponent implements OnInit {
     businessForm: FormGroup;
     business: Business;
     categories:any = [];
@@ -86,6 +87,7 @@ export class BusinessComponent implements OnInit{
     }
 
     removeCategory(item) {
+        // passed an index in array of selected categories
         if (null != item) {
             this.isFormChanged = true;
 
@@ -105,19 +107,22 @@ export class BusinessComponent implements OnInit{
     initCategories(data){
             this.categories = data;
 
-            if (null != this.business && this.business.categories.length > 0) {
+            if (null !== this.business && this.business.categories.length > 0) {
                 console.log(this.business.categories);
+                // check if selectedCategories is inialized
+                if (null === this.selectedCategories) {
+                    this.selectedCategories = [];
+                }
                 for( var i = 0; i < this.business.categories.length; i++) {
                     // remove from categories all the items existed in business.categories
                     // insert into selected categories all items removed
                     let catId = this.business.categories[i];
-
+                    // find the category by id in a list and store as a whole object
                     let category = this.categories.find( c => c._id === catId);
-                    if (null == this.selectedCategories) {
-                        this.selectedCategories = [];
-                    }
+                    // add the found category to selected
                     this.selectedCategories.push(category);
                     const index: number = this.categories.indexOf(category);
+                    // remove selected category from the general list
                     if (index !== -1) {
                         this.categories.splice(index, 1);
                     }
@@ -176,6 +181,11 @@ export class BusinessComponent implements OnInit{
                 }
             );
 
+        this.initBusinessForm();
+
+    }
+
+    initBusinessForm() {
         this.businessForm = new FormGroup({
             title: new FormControl(null, Validators.required),
             email: new FormControl(null, [

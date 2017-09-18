@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var Category = require('../models/category')
+var Category = require('../models/category');
+var Business = require('../models/business');
 
 // API END POINTS
 
@@ -47,7 +48,7 @@ router.get('/', function(req, res, next) {
             .exec(function(err, categories){
             if (err) {
                     return res.status(500).json({
-                        title: 'An error ocurred',
+                        title: 'An error occurred',
                         error: err
                     });
                 }
@@ -66,12 +67,18 @@ router.get('/', function(req, res, next) {
     });
 });
 
+// GET CATEGORIES BY BUSINESS_ID
+router.get('/:business_id', function(req, res, next) {
+    getCategoriesByParams(req.params.business_id, null, res);
+});
+
+
 // EDIT CATEGORY
 router.patch('/:id', function(req, res, next) {
     Category.findById(req.params.id, function (err, category) {
         if (err) {
             return res.status(500).json({
-                title: 'An error ocurred',
+                title: 'An error occurred',
                 error: err
             });
         }
@@ -89,7 +96,7 @@ router.patch('/:id', function(req, res, next) {
         category.save(function (err, result) {
             if (err) {
                 return res.status(500).json({
-                    title: 'An error ocurred',
+                    title: 'An error occurred',
                     error: err
                 });
             }
@@ -101,5 +108,52 @@ router.patch('/:id', function(req, res, next) {
     });
 });
 
+// GET CATEGORIES FUNCTION
+function getCategoriesByParams(business_id, coupon_id, res){
+    var query = {};
+    if (business_id){
+        query.business_id = business_id;
+    }
+    if (coupon_id){
+        query.coupon_id = coupon_id;
+    }
+    Business.findOne({_id: business_id})
+        .exec(function (err, business) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error ocurred',
+                    error: err
+                });
+            }
+            if (business) {
+                //find all categories
+                //ObjectID = require('mongoose').ObjectID;
+                var categoriesIds = business.categories;
+                var array = [{
+                    _id: 'abcd1234',
+                    name: 'key1'
+                }];
+                Category.find({_id: {$in: categoriesIds}}, function (err, array) {
+                    if (err) {
+                        return res.status(500).json({
+                            title: 'An error ocurred',
+                            error: err
+                        });
+                    } else {
+                        var objects = {};
+                        array.forEach(o => objects[o._id] = o);
+                        var categories = categoriesIds.map(id => objects[id]);
+                        console.log(categories);
+                        res.status(200).json({
+                            message: 'Success',
+                            obj: categories
+                        })
+                    }
+                });
+
+            }
+        });
+
+}
 
 module.exports = router;

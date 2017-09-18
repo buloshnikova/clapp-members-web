@@ -79,6 +79,7 @@ router.get('/:business_id/:coupon_id', function(req, res, next) {
         });
 });
 
+
 // ADD NEW COUPON
 router.post('/', function(req, res, next) {
     var decoded = jwt.decode(req.query.token);

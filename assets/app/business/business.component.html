@@ -136,17 +136,45 @@
                 <a class="btn btn-danger categories-tag-btn" (click)="removeLocation(index)">X</a>
                 <span>{{business?.locations[index].country}}</span>
                 <input
-                        id="locations-{{index}}"
-                        [(ngModel)]="business?.locations[index].country"
-                        name="locations-{{index}}"
+                    id="country-{{index}}"
+                    [(ngModel)]="business?.locations[index].country"
+                    name="country-{{index}}"
+                    type="text"
+                    class="form-control"
+                    placeholder="Country"
+                    aria-label="Country">
+                <input
+                        id="city-{{index}}"
+                        [(ngModel)]="business?.locations[index].city"
+                        name="city-{{index}}"
                         type="text"
                         class="form-control"
-                        placeholder="Country"
-                        aria-label="Country">
-                <input type="text" class="form-control" placeholder="City" aria-label="City" value={{location?.city}}>
-                <input type="text" class="form-control" placeholder="Address Line 1" aria-label="Address Line 1" value={{location?.address_line_1}}>
-                <input type="text" class="form-control" placeholder="Address Line 2" aria-label="Address Line 2" value={{location?.address_line_2}}>
-                <input type="text" class="form-control" placeholder="Google maps link" aria-label="Google maps link" value={{location?.google_maps_url}}>
+                        placeholder="City"
+                        aria-label="City">
+                <input
+                        id="address_line_1-{{index}}"
+                        [(ngModel)]="business?.locations[index].address_line_1"
+                        name="address_line_1-{{index}}"
+                        type="text"
+                        class="form-control"
+                        placeholder="Address line 1"
+                        aria-label="Address line 1">
+                <input
+                        id="address_line_2-{{index}}"
+                        [(ngModel)]="business?.locations[index].address_line_2"
+                        name="address_line_2-{{index}}"
+                        type="text"
+                        class="form-control"
+                        placeholder="Address line 2"
+                        aria-label="Address line 2">
+                <input
+                        id="google_maps_url-{{index}}"
+                        [(ngModel)]="business?.locations[index].google_maps_url"
+                        name="google_maps_url-{{index}}"
+                        type="text"
+                        class="form-control"
+                        placeholder="Google maps"
+                        aria-label="Google maps">
             </li>
         </ul>
 

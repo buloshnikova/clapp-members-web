@@ -1,14 +1,30 @@
-<div class="col-md-8 col-md-offset-2">
-    <form (ngSubmit)="onSubmit(f)" #f="ngForm" ngNativeValidate>
+<div  class="col-md-8 col-md-offset-2">
+    <div *ngIf="isHidden">
+        <button
+                id="addCoupon"
+                class="btn btn-primary"
+                type="button"
+                (click)="addCoupon()">+ Add new coupon</button>
+
+    </div>
+    <div *ngIf="!isHidden">
+        <button
+                id="discardCoupon"
+                class="btn btn-danger"
+                type="button"
+                (click)="discardCoupon()">- Discard coupon</button>
+
+    </div>
+</div>
+<div *ngIf="!isHidden" class="col-md-8 col-md-offset-2 edit-coupon-form">
+    <form [formGroup]="couponForm" novalidate>
         <div class="form-group">
             <label for="title">Title</label>
             <input
                     type="text"
                     id="title"
                     class="form-control"
-                    [ngModel]="coupon?.title"
-                    name="title"
-                    required>
+                    formControlName="title">
         </div>
         <div class="form-group">
         <label for="exp_date">Expiration Date</label>
@@ -16,26 +32,80 @@
                 type="text"
                 id="exp_date"
                 class="form-control"
-                [ngModel]="coupon?.exp_date"
-                name="exp_date">
+                formControlName="exp_date">
         </div>
-        <div>
-            <input
-                    type="text"
-                    id="barcode_img"
-                    class="form-control"
-                    [ngModel]="coupon?.barcode_img"
-                    name="barcode_img">
-            <img [src]="coupon?.barcode_img"
-                 id="barcode_img_img"
-                 name="barcode_img_img"
-                 required>
+        <!--ADD CATEGORIES-->
+        <div class="form-group">
+            <label for="categories">Categories</label>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="input-group">
+                <span class="input-group-btn">
+                    <button
+                        id="add-category"
+                        class="btn btn-secondary"
+                        type="button"
+                        (click)="addCategory(c.value)">+</button>
+                </span>
+                        <select
+                                id="categories"
+                                class="form-control"
+                                formControlName="selectedCategory"
+                                #c>
+                            <option *ngFor="let category of businessCategories; let i=index" [value]="i">{{category.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!--CATEGORIES LIST-->
+            <ul class="categories-tag">
+                <li *ngFor="let item of selectedCategories; let i=index" [value]="i">
+                    <a class="btn btn-danger categories-tag-btn" (click)="removeCategory(i)">X</a>
+                    <span>{{item.name}}</span>
+                </li>
+            </ul>
         </div>
+
+        <!--ADD LOCATIONS-->
+        <!--<div class="form-group">-->
+            <!--<label for="locations">Locations</label>-->
+            <!--<div class="row">-->
+                <!--<div class="col-md-3">-->
+                    <!--<div class="input-group">-->
+                <!--<span class="input-group-btn">-->
+                    <!--<button-->
+                            <!--id="add-location"-->
+                            <!--class="btn btn-secondary"-->
+                            <!--type="button"-->
+                            <!--(click)="addLocation(c.value)">+</button>-->
+                <!--</span>-->
+                        <!--<select-->
+                                <!--id="locations"-->
+                                <!--class="form-control">-->
+                            <!--<option *ngFor="let location of businessLocations; let i=index" [value]="i">-->
+                                <!--{{location.country}}, {{location.city}}, {{location.address_line_1}}-->
+                            <!--</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+
+            <!--&lt;!&ndash;LOCATIONS LIST&ndash;&gt;-->
+            <!--<ul class="categories-tag">-->
+                <!--<li *ngFor="let item of selectedLocations; let i=index" [value]="i">-->
+                    <!--<a class="btn btn-danger categories-tag-btn" (click)="removeCategory(i)">X</a>-->
+                    <!--<span>{{item.name}}</span>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
+
+        <!--SUBMIT-->
         <input hidden
                id="coupon_type"
                name="coupon_type"
                value="0">
-        <button class="btn btn-danger" type="button" (click)="onClear(f)">Clear</button>
+        <button class="btn btn-danger" type="button" (click)="onClear()">Clear</button>
         <button class="btn btn-primary" type="submit">Save</button>
     </form>
 </div>

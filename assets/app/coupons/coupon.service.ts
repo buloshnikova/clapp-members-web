@@ -10,6 +10,7 @@ import { ErrorService } from "../errors/error.service";
 export class CouponService {
     private coupons: Coupon[] = [];
     couponIsEdit = new EventEmitter<Coupon>();
+    private _storedCategories: any = [];
 
     constructor(private http: Http, private errorService: ErrorService){}
 
@@ -58,27 +59,50 @@ export class CouponService {
             : '';
         return this.http.get('http://localhost:3000/coupon/' + business_id + token)
             .map((response: Response) => {
-                const coupon = response.json().obj;
-                let transformedCoupons: Coupon[] = [];
-                for (let coupon of coupons) {
-                    transformedCoupons.push(new Coupon(
-                        result.obj._id,
-                        result.obj.business._id,
-                        result.obj.business.title,
-                        result.obj.title,
-                        result.obj.barcode_img,
-                        result.obj.coupon_type,
-                        result.obj.description,
-                        result.obj.exp_date,
-                        result.obj.start_date,
-                        result.obj.img_type,
-                        result.obj.logo,
-                        result.obj.categories,
-                        result.obj.locations )
-                    );
-                }
-                this.coupons = transformedCoupons;
-                return transformedCoupons;
+                const coupons = response.json().obj;
+                return coupons;
+            })
+            .catch((error: Response) => {
+                this.errorService.handleError(error.json());
+                return Observable.throw(error.json());
+            });
+    }
+
+    getCategoriesByBusinessId() {
+
+        const business_id = localStorage.getItem('businessId')
+            ? localStorage.getItem('businessId')
+            : '';
+        return this.http.get('http://localhost:3000/category/' + business_id)
+            .map((response: Response) => {
+                this.setStoredCategories(response.json().obj);
+                return response.json().obj;
+            })
+            .catch((error: Response) => {
+                this.errorService.handleError(error.json());
+                return Observable.throw(error.json());
+            });
+
+    }
+
+    getStoredCategories() {
+        // copy the return array to keep original object untouched
+        let copy = JSON.parse(JSON.stringify(this._storedCategories));
+        return copy;
+    }
+
+    setStoredCategories(value: any[]) {
+        this._storedCategories = value;
+        //this._storedCategories = Object.assign({}, value);
+    }
+
+    getLocationsByBusinessId() {
+        const business_id = localStorage.getItem('businessId')
+            ? localStorage.getItem('businessId')
+            : '';
+        return this.http.get('http://localhost:3000/location/' + business_id)
+            .map((response: Response) => {
+                return response.json().obj;
             })
             .catch((error: Response) => {
                 this.errorService.handleError(error.json());
@@ -90,6 +114,7 @@ export class CouponService {
         this.couponIsEdit.emit(coupon);
     }
 
+    // EDIT COUPON
     updateCoupon(coupon: Coupon) {
         const body = JSON.stringify(coupon);
         const headers = new Headers({'Content-Type': 'application/json'});
@@ -104,6 +129,7 @@ export class CouponService {
             });
     }
 
+    // DELETE COUPON
     deleteCoupon(coupon: Coupon) {
         this.coupons.splice(this.coupons.indexOf(coupon), 1);
         const token = localStorage.getItem('token')
@@ -117,4 +143,5 @@ export class CouponService {
                 return Observable.throw(error.json());
             });
     }
+
 }
