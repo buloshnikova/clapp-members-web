@@ -26,6 +26,11 @@
 .thumb {
     display: inline-block;
     width: 19%;
+    vertical-align: top;
+}
+
+.thumb img {
+    width: 100%
 }
 .edit-coupon-form {
     margin-top: 15px;

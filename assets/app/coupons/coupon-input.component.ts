@@ -22,6 +22,8 @@ export class CouponInputComponent implements OnInit{
     selectedCategory = {};
     selectedLocations:any = [];
     selectedLocation = {};
+    selectedImage = '';
+    coupon_type = { "_id": '598611b1dd737c09beaea250'};
     isFormChanged = false;
 
     constructor(private fb: FormBuilder, private couponService: CouponService){
@@ -31,8 +33,11 @@ export class CouponInputComponent implements OnInit{
     createForm() {
         this.couponForm = this.fb.group({
             title: [''],
+            description: [''],
+            barcode_img: [''],
             exp_date: [''],
             selectedCategory: '',
+            selectedLocation: '',
             businessCategories: this.fb.array([]),
             businessLocations: this.fb.array([])
         });
@@ -41,10 +46,15 @@ export class CouponInputComponent implements OnInit{
     initFormWithObject() {
         this.couponForm.reset({
             title: this.coupon.title,
+            description: this.coupon.description,
+            barcode_img: this.coupon.barcode_img,
             exp_date: this.coupon.exp_date,
-            selectedCategory: 0
+            selectedCategory: 0,
+            selectedLocation: 0
         });
+        this.selectedImage = this.coupon.barcode_img;
         this.setCategoriesArray(this.businessCategories);
+        this.setLocationsArray(this.businessLocations);
     }
 
     setCategoriesArray(array: any) {
@@ -53,43 +63,55 @@ export class CouponInputComponent implements OnInit{
         this.couponForm.setControl('businessCategories', categoryFormArray);
     }
 
+    setLocationsArray(array: any) {
+        const locationFGs = array.map(location => this.fb.group(location));
+        const locationFormArray = this.fb.array(locationFGs);
+        this.couponForm.setControl('businessLocations', locationFormArray);
+    }
+
     ngOnChanges() {
         console.log("ngOnChanges");
     }
 
-    onSubmit(form: NgForm){
-        if(this.coupon){
-            this.coupon.title = form.value.title;
-            this.coupon.exp_date = form.value.exp_date;
-            this.coupon.barcode_img = form.value.barcode_img;
+    onSubmit(){
+    const formModel = this.couponForm.value;
 
-            this.couponService.updateCoupon(this.coupon)
-                .subscribe(
-                    result => console.log(result)
-                );
-            this.coupon = null;
-        } else {
-            const coupon = new Coupon(
-                form.value.business._id,
-                form.value.title,
-                form.value.barcode_img,
-                form.value.coupon_type,
-                '',//form.value.description,
-                Date.now(),//form.value.exp_date,
-                Date.now(),//form.value.start_date,
-                '',//form.value.img_type,
-                'https://imgs-steps-dragoart-386112.c.cdn77.org/how-to-draw-the-grumpy-cat-tard-the-grumpy-cat-step-9_1_000000122943_5.gif'//form.value.logo,
-                //form.value.categories,
-                //form.value.locations
+    if(null !== this.coupon && null !== this.coupon._id){
+        this.coupon.title = formModel.title;
+        this.coupon.description = formModel.description;
+        this.coupon.exp_date = formModel.exp_date;
+        this.coupon.barcode_img = formModel.barcode_img,
+        this.coupon.categories = this.selectedCategories,
+        this.coupon.locations = this.selectedLocations;
+
+        this.couponService.updateCoupon(this.coupon)
+            .subscribe(
+                result => console.log(result)
             );
-            this.couponService.addCoupon(coupon)
-                .subscribe(
-                    data => console.log(data),
-                    error => console.error(error)
-                );
-        }
-        form.resetForm();
+    } else {
+        const coupon = new Coupon(
+            null,
+            null,
+            null,
+            formModel.title,
+            formModel.barcode_img,
+            this.coupon_type,
+            formModel.description,
+            Date.now(),//form.value.exp_date,
+            Date.now(),//form.value.start_date,
+            null,
+            null,
+            this.selectedCategories,
+            this.selectedLocations
+    );
+        this.couponService.addCoupon(coupon)
+            .subscribe(
+                data => this.coupon._id = data.obj._id,
+                error => console.error(error)
+            );
     }
+    //this.couponForm.resetForm();
+}
 
     onClear() {
         this.coupon = null;
@@ -97,17 +119,24 @@ export class CouponInputComponent implements OnInit{
     }
 
     addCoupon() {
+        this.coupon = new Coupon();
+        this.onClear();
         this.isHidden = false;
     }
 
     discardCoupon() {
         this.isHidden = true;
-        this.onResetForm();
+        this.onClear();
     }
 
     // reset form
     onResetForm() {
-        this.couponForm.reset();
+        this.couponForm.reset({
+            selectedCategory: 0,
+            selectedLocation: 0
+        });
+        this.setCategoriesArray(this.businessCategories);
+        this.setLocationsArray(this.businessLocations);
     }
 
     initCouponForEdit(coupon: Coupon) {
@@ -121,6 +150,25 @@ export class CouponInputComponent implements OnInit{
         this.isHidden = false;
     }
 
+    // IMAGE UPLOAD
+    imageRemoved($event) {
+        if ($event) {
+            console.log($event);
+        }
+
+    }
+
+    imageFinishedUploading($event) {
+        var res = JSON.parse($event.serverResponse._body);
+        console.log(res.filename);
+        this.selectedImage = window.location.origin + res.filename;
+    }
+
+    uploadStateChange($event) {
+        if ($event) {
+            console.log($event);
+        }
+    }
     // CATEGORIES
     initCategories() {
         this.selectedCategories = [];
@@ -140,6 +188,7 @@ export class CouponInputComponent implements OnInit{
                 }
             }
         }
+        console.log(this.selectedCategories);
         this.selectedCategory = 0;
         this.sortCategories();
     }
@@ -194,18 +243,17 @@ export class CouponInputComponent implements OnInit{
 
     // LOCATIONS
     initLocations() {
+        this.selectedLocations = [];
+        this.businessLocations = this.couponService.getStoredLocations();
+        console.log(this.businessLocations);
         if (null !== this.coupon && this.coupon.locations.length > 0) {
-            if (null === this.selectedLocations) {
-                this.selectedCategories = [];
-            }
-            console.log(this.coupon.locations);
             for (var i = 0; i < this.coupon.locations.length; i++) {
                 //set each location id from locations
-                let locId = this.coupon.locations[i];
+                let locId = this.coupon.locations[i]._id;
                 // find the location from coupon in the whole list of business locations
                 let location = this.businessLocations.find( l => l._id === locId);
                 // add the found category to selected
-                this.selectedCategories.push(location);
+                this.selectedLocations.push(location);
                 const index: number = this.businessLocations.indexOf(location);
                 // remove selected category from the general list
                 if (index !== -1) {
@@ -213,8 +261,55 @@ export class CouponInputComponent implements OnInit{
                 }
             }
         }
-        this.selectedCategory = 0;
-        console.log(this.businessLocations);
+        this.selectedLocation = 0;
+    }
+
+    addLocation(index) {
+        this.isFormChanged = true;
+
+        if (null == this.coupon.categories) {
+            this.coupon.categories = [];
+        }
+        if (null == this.selectedCategories) {
+            this.selectedCategories = [];
+        }
+
+        this.selectedLocation = this.businessLocations[index];
+        this.coupon.locations.push(this.selectedLocation._id);
+        this.selectedLocations.push(this.selectedLocation);
+
+        // remove selected category from the whole list of categories
+        this.businessLocations.splice(index,1);
+
+        // clean up selected category
+        this.selectedLocation = 0;
+    }
+
+    removeLocation(index) {
+        // pass index of array
+        if (null != index) {
+            this.isFormChanged = true;
+
+            let location = this.selectedLocations[index];
+            this.coupon.locations.splice(index, 1);
+            this.selectedLocations.splice(index, 1);
+            // push back removed category to the whole list of categories
+            this.businessLocations.push(location);
+            this.sortLocations();
+            this.selectedLocation = 0;
+        }
+    }
+
+    sortLocations() {
+        this.businessLocations.sort((a: any, b: any) => {
+            if (a.name < b.name ){
+                return -1;
+            }else if( a.name > b.name ){
+                return 1;
+            }else{
+                return 0;
+            }
+        });
     }
 
     ngOnInit() {

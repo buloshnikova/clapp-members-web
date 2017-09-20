@@ -1,6 +1,6 @@
 export class Coupon {
     constructor(
-        public coupon_id: string,
+        public _id: string,
         public business_id: string,
         public business_title: string,
         public title: string,

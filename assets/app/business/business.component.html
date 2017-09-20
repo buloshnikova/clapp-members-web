@@ -134,7 +134,6 @@
         <ul class="locations-tag">
             <li *ngFor="let location of business?.locations; let index=index;">
                 <a class="btn btn-danger categories-tag-btn" (click)="removeLocation(index)">X</a>
-                <span>{{business?.locations[index].country}}</span>
                 <input
                     id="country-{{index}}"
                     [(ngModel)]="business?.locations[index].country"

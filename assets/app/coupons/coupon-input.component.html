@@ -12,12 +12,12 @@
                 id="discardCoupon"
                 class="btn btn-danger"
                 type="button"
-                (click)="discardCoupon()">- Discard coupon</button>
+                (click)="discardCoupon()">- Discard and close</button>
 
     </div>
 </div>
 <div *ngIf="!isHidden" class="col-md-8 col-md-offset-2 edit-coupon-form">
-    <form [formGroup]="couponForm" novalidate>
+    <form [formGroup]="couponForm" (ngSubmit)="onSubmit()" novalidate>
         <div class="form-group">
             <label for="title">Title</label>
             <input
@@ -27,6 +27,43 @@
                     formControlName="title">
         </div>
         <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+                    type="text"
+                    id="description"
+                    class="form-control"
+                    formControlName="description"
+                    rows="5"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="barcode_img">Barcode / QR</label>
+            <img
+                    id="barcode_img"
+                    [src]="selectedImage"
+                    class="form-control img-thumbnail logo">
+
+            <image-upload
+                    [max]="100"
+                    [preview]="false"
+                    [url]="'/upload/img'"
+                    [headers]="{Authorization: 'MyToken'}"
+                    [buttonCaption]="'Select Barcode / QR Image'"
+                    [dropBoxMessage]="'Drop your images here'"
+                    [extensions]="['jpg','png','gif']"
+                    [class]="'customClass'"
+                    (onFileUploadFinish)="imageFinishedUploading($event)"
+                    (onRemove)="imageRemoved($event)"
+                    (isPending)="uploadStateChange($event)">
+            </image-upload>
+
+            <input
+                    type="text"
+                    id="barcode"
+                    [ngModel]="selectedImage"
+                    formControlName="barcode_img"
+                    [hidden]="true">
+        </div>
+        <div class="form-group">
         <label for="exp_date">Expiration Date</label>
         <input
                 type="text"
@@ -34,11 +71,12 @@
                 class="form-control"
                 formControlName="exp_date">
         </div>
+
         <!--ADD CATEGORIES-->
         <div class="form-group">
             <label for="categories">Categories</label>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <div class="input-group">
                 <span class="input-group-btn">
                     <button
@@ -68,43 +106,48 @@
         </div>
 
         <!--ADD LOCATIONS-->
-        <!--<div class="form-group">-->
-            <!--<label for="locations">Locations</label>-->
-            <!--<div class="row">-->
-                <!--<div class="col-md-3">-->
-                    <!--<div class="input-group">-->
-                <!--<span class="input-group-btn">-->
-                    <!--<button-->
-                            <!--id="add-location"-->
-                            <!--class="btn btn-secondary"-->
-                            <!--type="button"-->
-                            <!--(click)="addLocation(c.value)">+</button>-->
-                <!--</span>-->
-                        <!--<select-->
-                                <!--id="locations"-->
-                                <!--class="form-control">-->
-                            <!--<option *ngFor="let location of businessLocations; let i=index" [value]="i">-->
-                                <!--{{location.country}}, {{location.city}}, {{location.address_line_1}}-->
-                            <!--</option>-->
-                        <!--</select>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
+        <div class="form-group">
+            <label for="locations">Locations</label>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="input-group">
+                <span class="input-group-btn">
+                    <button
+                            id="add-location"
+                            class="btn btn-secondary"
+                            type="button"
+                            (click)="addLocation(l.value)">+</button>
+                </span>
+                        <select
+                                id="locations"
+                                class="form-control"
+                                formControlName="selectedLocation"
+                                #l>
+                            <option *ngFor="let location of businessLocations; let i=index" [value]="i">{{location.country}}, {{location.city}}, {{location.address_line_1}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-            <!--&lt;!&ndash;LOCATIONS LIST&ndash;&gt;-->
-            <!--<ul class="categories-tag">-->
-                <!--<li *ngFor="let item of selectedLocations; let i=index" [value]="i">-->
-                    <!--<a class="btn btn-danger categories-tag-btn" (click)="removeCategory(i)">X</a>-->
-                    <!--<span>{{item.name}}</span>-->
-                <!--</li>-->
-            <!--</ul>-->
-        <!--</div>-->
+            <!--LOCATIONS LIST-->
+            <ul class="locations-tag">
+                <li *ngFor="let item of selectedLocations; let i=index" [value]="i">
+                    <div><a class="btn btn-danger categories-tag-btn" (click)="removeLocation(i)">X</a></div>
+                    <div class="form-control">{{item.country}}</div>
+                    <div class="form-control">{{item.city}}</div>
+                    <div class="form-control">{{item.address_line_1}}</div>
+                    <div class="form-control">{{item.address_line_2}}</div>
+                    <div><a href="item.google_maps_ur">{{item.google_maps_url}}</a></div>
+                </li>
+            </ul>
+        </div>
+
+        <!--<input hidden-->
+               <!--id="coupon_type"-->
+               <!--formControlName="coupon_type"-->
+               <!--[value]="598611b1dd737c09beaea250">-->
 
         <!--SUBMIT-->
-        <input hidden
-               id="coupon_type"
-               name="coupon_type"
-               value="0">
         <button class="btn btn-danger" type="button" (click)="onClear()">Clear</button>
         <button class="btn btn-primary" type="submit">Save</button>
     </form>

@@ -5,7 +5,7 @@ var mongooseUniqueValidator = require('mongoose-unique-validator');
 var Business = require('./business');
 
 var schema = new Schema({
-    business_id: [{type: Schema.Types.ObjectId, ref: 'Business', required: true}],
+    business_id: {type: Schema.Types.ObjectId, ref: 'Business', required: true},
     title: {type: String, required: true},
     barcode_img: {type: String, required: true},
     coupon_type: {type: Schema.Types.ObjectId, ref: 'CouponType', required: true},

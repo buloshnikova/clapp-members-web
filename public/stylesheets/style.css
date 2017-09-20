@@ -59,7 +59,7 @@ a.categories-tag-btn {
 }
 
 /*LOCATIONS*/
-.locations-tag input {
+.locations-tag input, .locations-tag div {
   margin: 5px 0;
 }
 

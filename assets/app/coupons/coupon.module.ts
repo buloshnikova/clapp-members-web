@@ -1,13 +1,14 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { BrowserModule } from '@angular/platform-browser';
-import { ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
 
 import { CouponsComponent } from "./coupons.component";
 import { CouponComponent } from "./coupon.component";
 import { CouponListComponent } from "./coupon-list.component";
 import { CouponInputComponent } from "./coupon-input.component";
 import { CouponService } from "./coupon.service";
+import { ImageUploadModule } from "angular2-image-upload";
 
 
 @NgModule({
@@ -20,6 +21,8 @@ import { CouponService } from "./coupon.service";
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FormsModule,
+        ImageUploadModule.forRoot(),
         BrowserModule
     ],
     providers: [CouponService]

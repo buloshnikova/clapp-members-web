@@ -107,7 +107,7 @@ router.post('/', function(req, res, next) {
             barcode_img: req.body.barcode_img,
             img_type: req.body.img_type,
             logo: req.body.logo,
-            coupon_type: req.body.coupon_type._id,
+            coupon_type: req.body.coupon_type,
             categories: req.body.categories.map(function(item){
                 return item._id;
             }),
