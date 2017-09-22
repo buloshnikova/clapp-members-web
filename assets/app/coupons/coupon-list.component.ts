@@ -20,13 +20,30 @@ export class CouponListComponent implements OnInit {
 
     constructor(private couponService: CouponService) {}
 
+    getCoupons() {
+        this.couponService.getCoupons()
+            .subscribe(
+                (coupons: Coupon[]) => {
+                    this.coupons = coupons;
+                    console.log(coupons);
+                }
+            );
+    }
+
     ngOnInit() {
 
-        this.couponService.getCoupons()
-        .subscribe(
-            (coupons: Coupon[]) => {
-                this.coupons = coupons;
-            }
+        this.getCoupons();
+
+        this.couponService.couponsChanged.subscribe(
+            (obj: any) => this.getCoupons()
+
         );
+
+        //this.couponService.getCoupons()
+        //.subscribe(
+        //    (coupons: Coupon[]) => {
+        //        this.coupons = coupons;
+        //    }
+        //);
     }
 }

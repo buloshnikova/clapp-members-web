@@ -10,6 +10,7 @@ import { ErrorService } from "../errors/error.service";
 export class CouponService {
     private coupons: Coupon[] = [];
     couponIsEdit = new EventEmitter<Coupon>();
+    couponsChanged = new EventEmitter<any>();
     private _storedCategories: any = [];
     private _storedLocations: any = [];
     private _business_id = '';
@@ -132,6 +133,11 @@ export class CouponService {
     // EDIT COUPON
     editCoupon(coupon: Coupon) {
         this.couponIsEdit.emit(coupon);
+    }
+
+    // RELOAD COUPONS
+    reloadCoupons(obj: any) {
+        this.couponsChanged.emit(obj);
     }
 
     // UPDATE COUPON

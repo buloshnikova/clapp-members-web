@@ -25,7 +25,7 @@ export class SigninComponent implements OnInit {
             .subscribe(
                 data => {
                     localStorage.setItem('token', data.token);
-                    localStorage.setItem('businessId', data.businessId);
+                    localStorage.setItem('businessId', data.business._id);
                     // TODO: check where leads default url '/'
                     this.router.navigateByUrl('/coupons');
                 },

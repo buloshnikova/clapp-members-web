@@ -5,6 +5,7 @@ var jwt = require('jsonwebtoken');
 var Coupon = require('../models/coupon');
 var User = require('../models/user');
 var Business = require('../models/business');
+var CouponType = require('../models/coupon_type');
 
 // API END POINTS
 
@@ -43,6 +44,7 @@ router.get('/:business_id', function(req, res, next) {
                     title: 'Not Authenticated',
                     error: { message: 'Business is not authenticated' }
                 });
+            console.log(coupons);
             res.status(200).json({
                 message: 'Success',
                 obj: coupons
@@ -160,7 +162,7 @@ router.patch('/:id', function(req, res, next){
        coupon.barcode_img = req.body.barcode_img;
        coupon.img_type = req.body.img_type;
        coupon.logo = req.body.logo;
-       coupon.coupon_type = req.body.coupon_type._id;
+       coupon.coupon_type = req.body.coupon_type;
        coupon.categories = req.body.categories.map(function(item){
            return item._id;
        });
@@ -193,30 +195,31 @@ router.delete('/:id', function(req, res, next){
                 title: 'An error occurred',
                 error: err
             });
-            if (!coupon){
-                return res.status(500).json({
-                    title: 'No Coupon Found',
-                    error: { message: 'Coupon Not Found'}
-                });
-            }
-            if (coupon.business_id != decoded.business._id)
-                return res.status(401).json({
-                    title: 'Not Authenticated',
-                    error: { message: 'Business is not authenticated' }
-                });
-            coupon.remove( function(err, result) {
-                if (err) {
-                    return res.status(500).json({
-                        title: 'An error occurred',
-                        error: err
-                    });
-                }
-                res.status(200).json({
-                    message: 'Deleted',
-                    obj: result
-                });
+        }
+        if (!coupon){
+            return res.status(500).json({
+                title: 'No Coupon Found',
+                error: { message: 'Coupon Not Found'}
             });
         }
+        if (coupon.business_id != decoded.business._id)
+            return res.status(401).json({
+                title: 'Not Authenticated',
+                error: { message: 'Business is not authenticated' }
+            });
+        var query = { _id: coupon._id };
+        Coupon.remove(query, function(err, result) {
+            if (err) {
+                return res.status(500).json({
+                    title: 'An error occurred',
+                    error: err
+                });
+            }
+            res.status(200).json({
+                message: 'Deleted',
+                obj: result
+            });
+        });
 
     });
 });

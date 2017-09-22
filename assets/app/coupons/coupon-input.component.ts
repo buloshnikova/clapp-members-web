@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, OnChanges } from "@angular/core";
+import { Component, OnInit, Input, OnChanges, Inject } from "@angular/core";
 import { FormArray, FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { DOCUMENT } from '@angular/platform-browser';
 
 import { Coupon } from "./coupon.model";
 import { CouponService } from "./coupon.service";
@@ -23,10 +24,10 @@ export class CouponInputComponent implements OnInit{
     selectedLocations:any = [];
     selectedLocation = {};
     selectedImage = '';
-    coupon_type = { "_id": '598611b1dd737c09beaea250'};
     isFormChanged = false;
+    coupon_type = { "_id": '598edf8b13944392d5c9029e'};
 
-    constructor(private fb: FormBuilder, private couponService: CouponService){
+    constructor(private fb: FormBuilder, private couponService: CouponService, @Inject(DOCUMENT) private document: Document){
         this.createForm();
     }
 
@@ -69,8 +70,8 @@ export class CouponInputComponent implements OnInit{
         this.couponForm.setControl('businessLocations', locationFormArray);
     }
 
-    ngOnChanges() {
-        console.log("ngOnChanges");
+    onCouponsChanges(obj: any) {
+        this.couponService.reloadCoupons(obj);
     }
 
     onSubmit(){
@@ -81,12 +82,16 @@ export class CouponInputComponent implements OnInit{
         this.coupon.description = formModel.description;
         this.coupon.exp_date = formModel.exp_date;
         this.coupon.barcode_img = formModel.barcode_img,
+        this.coupon.coupon_type = this.coupon_type,
         this.coupon.categories = this.selectedCategories,
         this.coupon.locations = this.selectedLocations;
 
         this.couponService.updateCoupon(this.coupon)
             .subscribe(
-                result => console.log(result)
+                result => {
+                    console.log(result),
+                    this.onCouponsChanges('Coupon updated')
+                }
             );
     } else {
         const coupon = new Coupon(
@@ -107,7 +112,8 @@ export class CouponInputComponent implements OnInit{
         this.couponService.addCoupon(coupon)
             .subscribe(
                 data => this.coupon._id = data.obj._id,
-                error => console.error(error)
+                error => console.error(error),
+                this.onCouponsChanges('New coupon added')
             );
     }
     //this.couponForm.resetForm();
@@ -140,6 +146,7 @@ export class CouponInputComponent implements OnInit{
     }
 
     initCouponForEdit(coupon: Coupon) {
+        this.document.body.scrollTop = 0;
         this.coupon = coupon;
         // init categories
         this.initCategories();
@@ -188,7 +195,6 @@ export class CouponInputComponent implements OnInit{
                 }
             }
         }
-        console.log(this.selectedCategories);
         this.selectedCategory = 0;
         this.sortCategories();
     }
