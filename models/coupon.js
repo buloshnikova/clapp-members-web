@@ -10,7 +10,7 @@ var schema = new Schema({
     barcode_img: {type: String, required: true},
     coupon_type: {type: Schema.Types.ObjectId, ref: 'CouponType', required: true},
     description: {type: String, required: false},
-    exp_date: {type: Number},
+    exp_date: {type: Schema.Types, ref: 'DateType'},
     start_date: {type: Number},
     img_type: {type: String},
     logo: {type: String},

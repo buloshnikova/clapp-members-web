@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/platform-browser';
 
 import { Coupon } from "./coupon.model";
 import { CouponService } from "./coupon.service";
+import {IMyDpOptions} from 'mydatepicker';
 
 @Component({
     selector: 'app-coupon-input',
@@ -26,6 +27,7 @@ export class CouponInputComponent implements OnInit{
     selectedImage = '';
     isFormChanged = false;
     coupon_type = { "_id": '598edf8b13944392d5c9029e'};
+    datePickerOptions = [{'firstDayOfWeek' : 'su'}];
 
     constructor(private fb: FormBuilder, private couponService: CouponService, @Inject(DOCUMENT) private document: Document){
         this.createForm();
@@ -54,6 +56,8 @@ export class CouponInputComponent implements OnInit{
             selectedLocation: 0
         });
         this.selectedImage = this.coupon.barcode_img;
+        this.initCategories();
+        this.initLocations();
         this.setCategoriesArray(this.businessCategories);
         this.setLocationsArray(this.businessLocations);
     }
@@ -75,6 +79,7 @@ export class CouponInputComponent implements OnInit{
     }
 
     onSubmit(){
+    //this.couponForm.markAsPristine(true);
     const formModel = this.couponForm.value;
 
     if(null !== this.coupon && null !== this.coupon._id){
@@ -141,12 +146,16 @@ export class CouponInputComponent implements OnInit{
             selectedCategory: 0,
             selectedLocation: 0
         });
+        this.selectedImage = '';
+        this.initCategories();
+        this.initLocations();
         this.setCategoriesArray(this.businessCategories);
         this.setLocationsArray(this.businessLocations);
     }
 
     initCouponForEdit(coupon: Coupon) {
         this.document.body.scrollTop = 0;
+        //this.couponForm.markAsPristine();
         this.coupon = coupon;
         // init categories
         this.initCategories();
@@ -317,6 +326,35 @@ export class CouponInputComponent implements OnInit{
             }
         });
     }
+
+    // DATEPICKER
+    setDate(): void {
+        // Set today date using the patchValue function
+        let date = new Date();
+        this.couponForm.patchValue({exp_date: {
+            date: {
+                year: date.getFullYear(),
+                month: date.getMonth() + 1,
+                day: date.getDate()}
+        }});
+    }
+
+    clearDate(): void {
+        // Clear the date using the patchValue function
+        this.couponForm.patchValue({exp_date: null});
+    }
+
+    onDateChanged(event) {
+        console.log(event);
+    }
+
+    public myDatePickerOptions: IMyDpOptions = {
+        // other options...
+        dateFormat: 'dd.mm.yyyy',
+    };
+
+    // Initialized to specific date (09.10.2018).
+    public model: any = { date: { year: 2018, month: 10, day: 9 } };
 
     ngOnInit() {
         this.couponService.couponIsEdit.subscribe(

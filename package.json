@@ -37,6 +37,7 @@
     "mongoose": "^4.11.7",
     "mongoose-unique-validator": "^1.0.5",
     "morgan": "~1.6.1",
+    "mydatepicker": "^2.0.31",
     "ng2-accordion": "0.0.15",
     "popper": "^1.0.0",
     "reflect-metadata": "^0.1.3",

@@ -9,7 +9,7 @@ import { CouponListComponent } from "./coupon-list.component";
 import { CouponInputComponent } from "./coupon-input.component";
 import { CouponService } from "./coupon.service";
 import { ImageUploadModule } from "angular2-image-upload";
-
+import { MyDatePickerModule } from 'mydatepicker';
 
 @NgModule({
     declarations:[
@@ -23,7 +23,8 @@ import { ImageUploadModule } from "angular2-image-upload";
         ReactiveFormsModule,
         FormsModule,
         ImageUploadModule.forRoot(),
-        BrowserModule
+        BrowserModule,
+        MyDatePickerModule
     ],
     providers: [CouponService]
 })

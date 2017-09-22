@@ -13,7 +13,7 @@
     </div>
     <footer class="panel-footer">
         <div class="date">
-            Expiration date: {{ coupon.exp_date }}
+            Expiration date: {{ coupon.exp_date.formatted }}
         </div>
         <div class="config">
             <a (click)="onEdit()">Edit</a>
