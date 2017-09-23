@@ -27,6 +27,8 @@ export class CouponInputComponent implements OnInit{
     selectedImage = '';
     isFormChanged = false;
     coupon_type = { "_id": '598edf8b13944392d5c9029e'};
+    // used kekeh/mydatepicker https://github.com/kekeh/mydatepicker
+    // npm: https://www.npmjs.com/package/angular2-datepicker, example: http://kekeh.github.io/mydatepicker/
     datePickerOptions = [{'firstDayOfWeek' : 'su'}];
 
     constructor(private fb: FormBuilder, private couponService: CouponService, @Inject(DOCUMENT) private document: Document){

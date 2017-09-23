@@ -6,9 +6,11 @@ import { Observable } from "rxjs";
 import { Business } from "./business.model";
 import { ErrorService } from "../errors/error.service";
 import { AuthService } from "../auth/auth.service";
+import { GlobalVariable } from '../path/global';
 
 @Injectable()
 export class BusinessService {
+    private baseApiUrl = GlobalVariable.BASE_API_URL;
     private business: Business;
 
     constructor(private http: Http, private errorService: ErrorService, private authService: AuthService) {}
@@ -22,7 +24,7 @@ export class BusinessService {
         const business_id = localStorage.getItem('businessId')
             ? localStorage.getItem('businessId')
             : '';
-        return this.http.get('http://localhost:3000/business/'+ business_id + token)
+        return this.http.get(this.baseApiUrl + 'business/'+ business_id + token)
             .map((response: Response) => {
                 const business = response.json().obj;
                 return business;
@@ -46,7 +48,7 @@ export class BusinessService {
         const business_id = localStorage.getItem('businessId')
             ? localStorage.getItem('businessId')
             : '';
-        return this.http.patch('http://localhost:3000/business/' + business_id + token, body, {headers: headers})
+        return this.http.patch(this.baseApiUrl + 'business/' + business_id + token, body, {headers: headers})
             .map((response: Response) => {
                 const business = response.json().obj;
                 return business;

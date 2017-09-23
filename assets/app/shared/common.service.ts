@@ -4,17 +4,19 @@ import 'rxjs/Rx';
 import { Observable } from "rxjs";
 
 import { ErrorService } from "../errors/error.service";
+import { GlobalVariable } from '../path/global';
 
 
 @Injectable()
 export class CommonService {
+    private baseApiUrl = GlobalVariable.BASE_API_URL;
     categories: any[] = [];
 
     constructor (private http: Http) {}
 
     getAllCategories() {
 
-        return this.http.get('http://localhost:3000/category')
+        return this.http.get(this.baseApiUrl + 'category')
             .map((response: Response) => {
                 const categories = response.json().obj;
                 return categories;

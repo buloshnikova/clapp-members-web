@@ -5,9 +5,11 @@ import { Observable } from "rxjs";
 
 import { Coupon } from "./coupon.model";
 import { ErrorService } from "../errors/error.service";
+import { GlobalVariable } from '../path/global';
 
 @Injectable()
 export class CouponService {
+    private baseApiUrl = GlobalVariable.BASE_API_URL;
     private coupons: Coupon[] = [];
     couponIsEdit = new EventEmitter<Coupon>();
     couponsChanged = new EventEmitter<any>();
@@ -27,7 +29,7 @@ export class CouponService {
         const token = localStorage.getItem('token')
             ? '?token=' + localStorage.getItem('token')
             : '';
-        return this.http.post('http://localhost:3000/coupon' + token, body, {headers: headers})
+        return this.http.post(this.baseApiUrl + 'coupon' + token, body, {headers: headers})
             .map((response: Response) => {
                 const result = response.json();
                 const coupon = new Coupon(
@@ -63,7 +65,7 @@ export class CouponService {
         const business_id = localStorage.getItem('businessId')
             ? localStorage.getItem('businessId')
             : '';
-        return this.http.get('http://localhost:3000/coupon/' + business_id + token)
+        return this.http.get(this.baseApiUrl + 'coupon/' + business_id + token)
             .map((response: Response) => {
                 const coupons = response.json().obj;
                 this.coupons = coupons;
@@ -81,7 +83,7 @@ export class CouponService {
         const business_id = localStorage.getItem('businessId')
             ? localStorage.getItem('businessId')
             : '';
-        return this.http.get('http://localhost:3000/category/' + business_id)
+        return this.http.get(this.baseApiUrl + 'category/' + business_id)
             .map((response: Response) => {
                 this.setStoredCategories(response.json().obj);
                 return response.json().obj;
@@ -109,7 +111,7 @@ export class CouponService {
         const business_id = localStorage.getItem('businessId')
             ? localStorage.getItem('businessId')
             : '';
-        return this.http.get('http://localhost:3000/location/' + business_id)
+        return this.http.get(this.baseApiUrl + 'location/' + business_id)
             .map((response: Response) => {
                 this.setStoredLocations(response.json().obj);
                 return response.json().obj;
@@ -147,7 +149,7 @@ export class CouponService {
         const token = localStorage.getItem('token')
             ? '?token=' + localStorage.getItem('token')
             : '';
-        return this.http.patch('http://localhost:3000/coupon/' + coupon._id + token, body, {headers: headers})
+        return this.http.patch(this.baseApiUrl + 'coupon/' + coupon._id + token, body, {headers: headers})
             .map((response: Response) => response.json())
             .catch((error: Response) => {
                 this.errorService.handleError(error.json());
@@ -162,7 +164,7 @@ export class CouponService {
             ? '?token=' + localStorage.getItem('token')
             : '';
 
-        return this.http.delete('http://localhost:3000/coupon/' + coupon._id + token)
+        return this.http.delete(this.baseApiUrl + 'coupon/' + coupon._id + token)
             .map((response: Response) => response.json())
             .catch((error: Response) => {
                 this.errorService.handleError(error.json());
