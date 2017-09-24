@@ -84,7 +84,7 @@ export class CouponInputComponent implements OnInit{
     //this.couponForm.markAsPristine(true);
     const formModel = this.couponForm.value;
 
-    if(null !== this.coupon && null !== this.coupon._id){
+    if(null != this.coupon && null != this.coupon._id){
         this.coupon.title = formModel.title;
         this.coupon.description = formModel.description;
         this.coupon.exp_date = formModel.exp_date;
@@ -132,9 +132,9 @@ export class CouponInputComponent implements OnInit{
     }
 
     addCoupon() {
-        this.coupon = new Coupon();
         this.onClear();
         this.isHidden = false;
+        this.coupon = new Coupon();
     }
 
     discardCoupon() {
@@ -284,11 +284,11 @@ export class CouponInputComponent implements OnInit{
     addLocation(index) {
         this.isFormChanged = true;
 
-        if (null == this.coupon.categories) {
-            this.coupon.categories = [];
+        if (null == this.coupon.locations) {
+            this.coupon.locations = [];
         }
-        if (null == this.selectedCategories) {
-            this.selectedCategories = [];
+        if (null == this.selectedLocations) {
+            this.selectedLocations = [];
         }
 
         this.selectedLocation = this.businessLocations[index];

@@ -23,6 +23,57 @@ export class BusinessComponent implements OnInit {
     constructor(private businessService: BusinessService, private commonService: CommonService) {}
 
 
+    ngOnInit() {
+        this.businessService.getBusinessInfo()
+            .subscribe(
+                (business: Business) => {
+                    this.business = business;
+                    console.log(this.business);
+                }
+            );
+        this.commonService.getAllCategories()
+            .subscribe(
+
+                data => {
+                    this.initCategories(data);
+                }
+            );
+
+        this.initBusinessForm();
+
+    }
+
+    initBusinessForm() {
+        this.businessForm = new FormGroup({
+            title: new FormControl(null, Validators.required),
+            email: new FormControl(null, [
+                Validators.required
+                //Validators.pattern("[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
+            ]),
+            //password: new FormControl(null, Validators.required),
+            logo: new FormControl(null),
+            info: new FormControl(null),
+            selectedCategory: new FormControl(null)
+        });
+        this.businessForm.get('selectedCategory').setValue('', { onlySelf: true,emitEvent:false });
+
+        //this.businessForm.valueChanges.subscribe( data => {
+        //    console.log('Form changes', data);
+        //    this.isFormChanged = true;
+        //});
+        this.businessForm.get('title').valueChanges.subscribe( data => {
+            this.isFormChanged = true;
+        });
+
+        this.businessForm.get('logo').valueChanges.subscribe( data => {
+            this.isFormChanged = true;
+        });
+
+        this.businessForm.get('info').valueChanges.subscribe( data => {
+            this.isFormChanged = true;
+        });
+    }
+
     onSubmit() {
         this.isFormChanged = false;
         const business = new Business(
@@ -107,7 +158,7 @@ export class BusinessComponent implements OnInit {
     initCategories(data){
             this.categories = data;
 
-            if (null !== this.business && this.business.categories.length > 0) {
+            if (null != this.business && this.business.categories.length > 0) {
                 console.log(this.business.categories);
                 // check if selectedCategories is inialized
                 if (null === this.selectedCategories) {
@@ -150,7 +201,8 @@ export class BusinessComponent implements OnInit {
     // LOCATIONS
     addLocation() {
         this.isFormChanged = true;
-        let newLocation = {};
+        var newLocation = {};
+        newLocation.business_id = this.business._id;
         this.business.locations.push(newLocation);
     }
 
@@ -164,56 +216,4 @@ export class BusinessComponent implements OnInit {
     trackByIndex(index: number, obj: any): any {
         return index;
     }
-
-    ngOnInit() {
-        this.businessService.getBusinessInfo()
-            .subscribe(
-                (business: Business) => {
-                    this.business = business;
-                    console.log(this.business);
-                }
-            );
-        this.commonService.getAllCategories()
-            .subscribe(
-
-                data => {
-                    this.initCategories(data);
-                }
-            );
-
-        this.initBusinessForm();
-
-    }
-
-    initBusinessForm() {
-        this.businessForm = new FormGroup({
-            title: new FormControl(null, Validators.required),
-            email: new FormControl(null, [
-                Validators.required
-                //Validators.pattern("[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$")
-            ]),
-            //password: new FormControl(null, Validators.required),
-            logo: new FormControl(null),
-            info: new FormControl(null),
-            selectedCategory: new FormControl(null)
-        });
-        this.businessForm.get('selectedCategory').setValue('', { onlySelf: true,emitEvent:false });
-
-        //this.businessForm.valueChanges.subscribe( data => {
-        //    console.log('Form changes', data);
-        //    this.isFormChanged = true;
-        //});
-        this.businessForm.get('title').valueChanges.subscribe( data => {
-            this.isFormChanged = true;
-        });
-
-        this.businessForm.get('logo').valueChanges.subscribe( data => {
-            this.isFormChanged = true;
-        });
-
-        this.businessForm.get('info').valueChanges.subscribe( data => {
-            this.isFormChanged = true;
-        });
-    }
-
 }

@@ -194,10 +194,15 @@ router.patch('/:id', function(req, res, next) {
             }
 
             Location.insertMany(locations, function(err, location_ids){
+                if (err) {
+                    return res.status(500).json({
+                        title: 'An error ocurred',
+                        error: err
+                    });
+                }
                 location_ids.map((loc) => {
                     return loc._id;
                 });
-
                 // save business
 
                 business.title = req.body.title;
@@ -225,5 +230,28 @@ router.patch('/:id', function(req, res, next) {
         });
     });
 });
+
+function saveBusiness(request, location_ids, business){
+    business.title = request.title;
+    business.info = request.info;
+    business.logo = request.logo;
+    business.categories = request.categories;
+    business.locations = location_ids;
+    business.coupons = request.coupons;
+
+    console.log(business);
+    business.save(function (err, result) {
+        if (err) {
+            return res.status(500).json({
+                title: 'An error ocurred',
+                error: err
+            });
+        }
+        res.status(200).json({
+            message: 'Updated Business',
+            obj: result
+        });
+    });
+}
 
 module.exports = router;

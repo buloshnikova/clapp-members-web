@@ -25,11 +25,16 @@ router.use('/', function(req, res, next) {
 // GET ALL COUPONS BY BUSINESS ID
 router.get('/:business_id', function(req, res, next) {
     var decoded = jwt.decode(req.query.token);
-    if (req.params.business_id != decoded.business._id)
-        return res.status(401).json({
+    console.log(decoded);
+
+    if (req.params.business_id != decoded.business._id) {
+        console.log(categories);
+
+    return res.status(401).json({
             title: 'Not Authenticated',
             error: { message: 'Business is not authenticated' }
         });
+    }
     Coupon.find({business_id: req.params.business_id})
         .populate('categories locations coupon_type')
         .exec(function(err, coupons) {
@@ -39,10 +44,10 @@ router.get('/:business_id', function(req, res, next) {
                     error: err
                 });
             }
-            if (!coupons[0] && coupons[0].business_id != decoded.business_id)
+            if (coupons[0] == null)
                 return res.status(401).json({
-                    title: 'Not Authenticated',
-                    error: { message: 'Business is not authenticated' }
+                    title: 'Nothing to show',
+                    error: { message: 'There are no coupons yet' }
                 });
             console.log(coupons);
             res.status(200).json({
