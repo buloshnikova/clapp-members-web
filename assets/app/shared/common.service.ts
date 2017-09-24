@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 
 import { ErrorService } from "../errors/error.service";
 import { GlobalVariable } from '../path/global';
+import {AuthService} from "../auth/auth.service";
 
 
 @Injectable()
@@ -12,7 +13,7 @@ export class CommonService {
     private baseApiUrl = GlobalVariable.BASE_API_URL;
     categories: any[] = [];
 
-    constructor (private http: Http) {}
+    constructor (private http: Http, private errorService: ErrorService, private authService: AuthService) {}
 
     getAllCategories() {
 

@@ -21,9 +21,9 @@ export class CouponInputComponent implements OnInit{
     businessCategories: any = [];
     businessLocations: any = [];
     selectedCategories:any = [];
-    selectedCategory = {};
+    selectedCategory:any = {};
     selectedLocations:any = [];
-    selectedLocation = {};
+    selectedLocation:any = {};
     selectedImage = '';
     isFormChanged = false;
     coupon_type = { "_id": '598edf8b13944392d5c9029e'};
@@ -118,9 +118,11 @@ export class CouponInputComponent implements OnInit{
     );
         this.couponService.addCoupon(coupon)
             .subscribe(
-                data => this.coupon._id = data.obj._id,
-                error => console.error(error),
-                this.onCouponsChanges('New coupon added')
+                data => {
+                    this.coupon._id = data.obj._id;
+                    this.onCouponsChanges('New coupon added');
+                },
+                error => console.error(error)
             );
     }
     //this.couponForm.resetForm();

@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 
-import { Coupon } from "./coupon.nodel";
+import { Coupon } from "./coupon.model";
 import { CouponService } from "./coupon.service";
 
 @Component({

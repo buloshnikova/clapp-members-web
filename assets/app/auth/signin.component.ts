@@ -2,8 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import {AuthService} from "./auth.service.ts";
-import { Business } from "./../business/business.model.ts";
+import {AuthService} from "./auth.service";
+import { Business } from "./../business/business.model";
 
 @Component({
     selector: 'app-signin',
@@ -26,7 +26,6 @@ export class SigninComponent implements OnInit {
                 data => {
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('businessId', data.business._id);
-                    // TODO: check where leads default url '/'
                     this.router.navigateByUrl('/business');
                 },
                 error => console.error(error)

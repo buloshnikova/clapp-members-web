@@ -18,7 +18,6 @@ export class AuthService {
     signup(business: Business) {
         const body = JSON.stringify(business);
         const headers = new Headers({'Content-Type': 'application/json'});
-        // TODO: use global parameter domain url
         return this.http.post(this.baseApiUrl + 'business/signup', body, {headers: headers})
             .map((response: Response) => response.json())
             .catch((error: Response) => {

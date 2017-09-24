@@ -1,5 +1,6 @@
 import { Component, OnInit} from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import * as ts from "typescript";
 
 import { BusinessService } from "./business.service";
 import { Business } from "./business.model";
@@ -17,7 +18,7 @@ export class BusinessComponent implements OnInit {
     business: Business;
     categories:any = [];
     selectedCategories:any = [];
-    selectedCategory = {};
+    selectedCategory:any = {};
     isFormChanged = false;
 
     constructor(private businessService: BusinessService, private commonService: CommonService) {}
@@ -127,7 +128,10 @@ export class BusinessComponent implements OnInit {
         }
 
         this.selectedCategory = this.categories[index];
-        this.business.categories.push(this.selectedCategory._id);
+        if (this.selectedCategory._id){
+            this.business.categories.push(this.selectedCategory._id);
+        }
+
         this.selectedCategories.push(this.selectedCategory);
 
         // remove selected category from the whole list of categories
@@ -201,7 +205,7 @@ export class BusinessComponent implements OnInit {
     // LOCATIONS
     addLocation() {
         this.isFormChanged = true;
-        var newLocation = {};
+        var newLocation:any = {};
         newLocation.business_id = this.business._id;
         this.business.locations.push(newLocation);
     }

@@ -33,19 +33,19 @@ export class CouponService {
             .map((response: Response) => {
                 const result = response.json();
                 const coupon = new Coupon(
-                    response.obj._id,
-                    response.obj.business._id,
-                    response.obj.business.title,
-                    response.obj.title,
-                    response.obj.barcode_img,
-                    response.obj.coupon_type,
-                    response.obj.description,
-                    response.obj.exp_date,
-                    response.obj.start_date,
-                    response.obj.img_type,
-                    response.obj.logo,
-                    response.obj.categories,
-                    response.obj.locations
+                    result.obj._id,
+                    result.obj.business._id,
+                    result.obj.business.title,
+                    result.obj.title,
+                    result.obj.barcode_img,
+                    result.obj.coupon_type,
+                    result.obj.description,
+                    result.obj.exp_date,
+                    result.obj.start_date,
+                    result.obj.img_type,
+                    result.obj.logo,
+                    result.obj.categories,
+                    result.obj.locations
                 );
 
                 this.coupons.push(coupon);
