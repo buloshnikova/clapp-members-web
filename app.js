@@ -5,7 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var upload = require('express-fileupload'); // example: https://www.npmjs.com/package/express-fileupload
+var upload = require('express-fileupload');  // example: https://www.npmjs.com/package/express-fileupload
 
 var appRoutes = require('./routes/app');
 var couponRoutes = require('./routes/coupon');
