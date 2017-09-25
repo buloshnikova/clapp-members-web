@@ -2,10 +2,12 @@ import { Http, Response, Headers } from "@angular/http";
 import { Injectable, EventEmitter } from "@angular/core";
 import 'rxjs/Rx';
 import { Observable } from "rxjs";
+import { Router } from "@angular/router";
 
 import { Coupon } from "./coupon.model";
 import { ErrorService } from "../errors/error.service";
 import { GlobalVariable } from '../path/global';
+import { AuthService } from "../auth/auth.service";
 
 @Injectable()
 export class CouponService {
@@ -17,7 +19,7 @@ export class CouponService {
     private _storedLocations: any = [];
     private _business_id = '';
 
-    constructor(private http: Http, private errorService: ErrorService){
+    constructor(private http: Http, private errorService: ErrorService, private router: Router, private authService: AuthService ){
         this._business_id = localStorage.getItem('businessId');
     }
 
@@ -72,8 +74,15 @@ export class CouponService {
                 return coupons;
             })
             .catch((error: Response) => {
-                this.errorService.handleError(error.json());
-                return Observable.throw(error.json());
+                if (error.status == 405) {
+                    this.router.navigate(['/auth', 'signin']);
+                } else if (error.status === 401) {
+                    this.authService.logout();
+                }
+                else {
+                    this.errorService.handleError(error.json());
+                    return Observable.throw(error.json());
+                }
             });
     }
 

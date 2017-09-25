@@ -13,7 +13,7 @@ var CouponType = require('../models/coupon_type');
 router.use('/', function(req, res, next) {
     jwt.verify(req.query.token, 'secretkey', function(err, decoded) {
         if(err) {
-            return res.status(401).json({
+            return res.status(405).json({
                 title: 'Not Authenticated',
                 error: err
             });

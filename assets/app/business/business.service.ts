@@ -2,6 +2,7 @@ import { Http, Response, Headers } from "@angular/http";
 import { Injectable, EventEmitter } from "@angular/core";
 import 'rxjs/Rx';
 import { Observable } from "rxjs";
+import { Router } from "@angular/router";
 
 import { Business } from "./business.model";
 import { ErrorService } from "../errors/error.service";
@@ -13,7 +14,7 @@ export class BusinessService {
     private baseApiUrl = GlobalVariable.BASE_API_URL;
     private business: Business;
 
-    constructor(private http: Http, private errorService: ErrorService, private authService: AuthService) {}
+    constructor(private http: Http, private errorService: ErrorService, private authService: AuthService, private router: Router ) {}
 
     getBusinessInfo() {
         //const body = JSON.stringify(business);
@@ -31,10 +32,16 @@ export class BusinessService {
             })
             .catch((error: Response) => {
                 console.log(error.status);
-                this.errorService.handleError(error.json());
-                if (error.status === 401) {
+                if (error.status == 405) {
+                    this.router.navigate(['/auth', 'signin']);
+                } else if (error.status === 401) {
                     this.authService.logout();
                 }
+                else {
+                    this.errorService.handleError(error.json());
+                    return Observable.throw(error.json());
+                }
+
                 return Observable.throw(error.json());
             });
     }
