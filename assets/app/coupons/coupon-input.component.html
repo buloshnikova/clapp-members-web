@@ -83,13 +83,14 @@
                         id="add-category"
                         class="btn btn-secondary"
                         type="button"
-                        (click)="addCategory(c.value)">+</button>
+                        (click)="addCategory(c.value)"
+                        [disabled]="this.businessCategories.length === 0">+</button>
                 </span>
                         <select
                                 id="categories"
                                 class="form-control"
                                 formControlName="selectedCategory"
-                                #c>
+                                #c >
                             <option *ngFor="let category of businessCategories; let i=index" [value]="i">{{category.name}}</option>
                         </select>
                     </div>
@@ -116,7 +117,8 @@
                             id="add-location"
                             class="btn btn-secondary"
                             type="button"
-                            (click)="addLocation(l.value)">+</button>
+                            (click)="addLocation(l.value)"
+                            [disabled]="this.businessLocations.length === 0">+</button>
                 </span>
                         <select
                                 id="locations"

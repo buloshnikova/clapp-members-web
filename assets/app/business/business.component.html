@@ -78,7 +78,8 @@
                     <button
                             class="btn btn-secondary"
                             type="button"
-                            (click)="addCategory(c.value)">+</button>
+                            (click)="addCategory(c.value)"
+                            [disabled]="this.categories.length === 0">+</button>
                 </span>
                         <select
                                 id="categories"
