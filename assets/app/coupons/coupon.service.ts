@@ -8,10 +8,13 @@ import { Coupon } from "./coupon.model";
 import { ErrorService } from "../errors/error.service";
 import { GlobalVariable } from '../path/global';
 import { AuthService } from "../auth/auth.service";
+import { ErrorConstants } from "../errors/constants";
 
 @Injectable()
 export class CouponService {
     private baseApiUrl = GlobalVariable.BASE_API_URL;
+    private errorNotProvidedAduthDetails = ErrorConstants.NOT_PROVIDED_AUTHENTICATION_DETAILS;
+    private errorWrongCredentials = ErrorConstants.WRONG_CREDENTIALS;
     private coupons: Coupon[] = [];
     couponIsEdit = new EventEmitter<Coupon>();
     couponsChanged = new EventEmitter<any>();
@@ -74,9 +77,9 @@ export class CouponService {
                 return coupons;
             })
             .catch((error: Response) => {
-                if (error.status == 405) {
+                if (error.status == this.errorNotProvidedAduthDetails) {
                     this.router.navigate(['/auth', 'signin']);
-                } else if (error.status === 401) {
+                } else if (error.status === this.errorWrongCredentials) {
                     this.authService.logout();
                 }
                 else {
