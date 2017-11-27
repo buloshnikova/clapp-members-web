@@ -175,7 +175,6 @@ router.patch('/:id', function(req, res, next){
        coupon.locations = req.body.locations.map(function(item){
            return item._id;
        });
-
        //save coupon to DB
        coupon.save( function(err, result) {
            if (err) {

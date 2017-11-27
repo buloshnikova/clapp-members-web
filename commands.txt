@@ -19,7 +19,7 @@ ng serve
 
 --go to mongo db from terminal
 cd /Users/inna/DEV/mongodb/bin
-./mongo
+./mongod
 
 --get into database
 use clapp-members

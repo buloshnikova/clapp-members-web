@@ -18,8 +18,8 @@ var uploadRoutes = require('./routes/upload');
 
 var app = express();
 //switch to production db when deploying
-//mongoose.connect('127.0.0.1:27017/clapp-members');
-mongoose.connect('clappmember:dotnet01@ds141434.mlab.com:41434/clapp-members');
+mongoose.connect('127.0.0.1:27017/clapp-members');
+//mongoose.connect('clappmember:dotnet01@ds141434.mlab.com:41434/clapp-members');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
