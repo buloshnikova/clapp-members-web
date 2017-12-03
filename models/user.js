@@ -5,7 +5,8 @@ var mongooseUniqueValidator = require('mongoose-unique-validator');
 var schema = new Schema({
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    name: {type: String, required: true},
+    firstName: {type: String},
+    lastName: {type: String},
     account_type: {type: String},
     categories: [{type: Schema.Types.ObjectId, ref: 'Category'}],
     locations: [{type: Schema.Types.ObjectId, ref: 'Location'}],

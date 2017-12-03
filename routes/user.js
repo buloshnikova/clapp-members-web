@@ -18,16 +18,19 @@ router.post('/signup', function (req, res, next) {
         password: bcrypt.hashSync(req.body.password, 10),
         email: req.body.email
     });
-    user.save(function (err, result){
+    user.save(function (err, user){
         if (err) {
             return res.status(500).json({
                 title: 'An error ocurred',
                 error: err
             });
         }
+        console.log(user);
+        var token = jwt.sign({ user: user}, 'secretkey', {expiresIn:7200});
         res.status(201).json({
             message: 'User Created',
-            obj: result
+            token: token,
+            userId: user._id
         });
     });
 });
