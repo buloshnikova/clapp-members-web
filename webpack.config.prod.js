@@ -29,9 +29,9 @@ module.exports = webpackMerge.smart(commonConfig, {
         ]
     },
 
-    // plugins: [
-    //     new webpack.optimize.UglifyJsPlugin({
-    //         sourceMap: true
-    //     })
-    // ]
+    plugins: [
+        new webpack.optimize.UglifyJsPlugin({
+            sourceMap: true
+        })
+    ]
 });
